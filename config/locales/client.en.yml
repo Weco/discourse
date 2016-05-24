@@ -112,7 +112,7 @@ en:
       previous_month: 'Previous Month'
       next_month: 'Next Month'
     share:
-      topic: 'share a link to this topic'
+      topic: 'share a link to this issue'
       post: 'post #%{postNumber}'
       close: 'close'
       twitter: 'share this link on Twitter'
@@ -166,7 +166,7 @@ en:
         ap_northeast_2: "Asia Pacific (Seoul)"
         sa_east_1: "South America (Sao Paulo)"
 
-    edit: 'edit the title and category of this topic'
+    edit: 'edit the title and company of this issue'
     not_implemented: "That feature hasn't been implemented yet, sorry!"
     no_value: "No"
     yes_value: "Yes"
@@ -317,12 +317,12 @@ en:
         ok: "OK"
 
     user_action:
-      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> posted <a href='{{issueUrl}}'>the issue</a>"
-      you_posted_topic: "<a href='{{userUrl}}'>You</a> posted <a href='{{issueUrl}}'>the issue</a>"
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> posted <a href='{{topicUrl}}'>the issue</a>"
+      you_posted_topic: "<a href='{{userUrl}}'>You</a> posted <a href='{{topicUrl}}'>the issue</a>"
       user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> replied to <a href='{{postUrl}}'>{{post_number}}</a>"
       you_replied_to_post: "<a href='{{userUrl}}'>You</a> replied to <a href='{{postUrl}}'>{{post_number}}</a>"
-      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> replied to <a href='{{issueUrl}}'>the issue</a>"
-      you_replied_to_topic: "<a href='{{userUrl}}'>You</a> replied to <a href='{{issueUrl}}'>the issue</a>"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> replied to <a href='{{topicUrl}}'>the issue</a>"
+      you_replied_to_topic: "<a href='{{userUrl}}'>You</a> replied to <a href='{{topicUrl}}'>the issue</a>"
 
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> mentioned <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> mentioned <a href='{{user2Url}}'>you</a>"
@@ -1104,13 +1104,13 @@ en:
         group_message_summary: "Messages in group inbox"
 
       popup:
-        mentioned: '{{username}} mentioned you in "{{issue}}" - {{site_title}}'
-        group_mentioned: '{{username}} mentioned you in "{{issue}}" - {{site_title}}'
-        quoted: '{{username}} quoted you in "{{issue}}" - {{site_title}}'
-        replied: '{{username}} replied to you in "{{issue}}" - {{site_title}}'
-        posted: '{{username}} posted in "{{issue}}" - {{site_title}}'
-        private_message: '{{username}} sent you a private message in "{{issue}}" - {{site_title}}'
-        linked: '{{username}} linked to your post from "{{issue}}" - {{site_title}}'
+        mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
+        group_mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
+        quoted: '{{username}} quoted you in "{{topic}}" - {{site_title}}'
+        replied: '{{username}} replied to you in "{{topic}}" - {{site_title}}'
+        posted: '{{username}} posted in "{{topic}}" - {{site_title}}'
+        private_message: '{{username}} sent you a private message in "{{topic}}" - {{site_title}}'
+        linked: '{{username}} linked to your post from "{{topic}}" - {{site_title}}'
 
     upload_selector:
       title: "Add an image"
@@ -1223,13 +1223,13 @@ en:
         title: 'Move to Inbox'
         help: 'Move message back to Inbox'
       list: 'Issues'
-      new: 'new topic'
+      new: 'new issue'
       unread: 'unread'
       new_topics:
-        one: '1 new topic'
+        one: '1 new issue'
         other: '{{count}} new issues'
       unread_topics:
-        one: '1 unread topic'
+        one: '1 unread issue'
         other: '{{count}} unread issues'
       title: 'Issue'
       invalid_access:
@@ -1273,14 +1273,14 @@ en:
         } {
           NEW, plural,
             =0 {}
-            one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic}
+            one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> issue}
             other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> issues}
         } remaining, or {CATEGORY, select, true {browse other issues in {catLink}} false {{latestLink}} other {}}"
 
       browse_all_categories: Browse all companies
 
       view_latest_topics: view latest issues
-      suggest_create_topic: Why not create a topic?
+      suggest_create_topic: Why not create a issue?
       jump_reply_up: jump to earlier reply
       jump_reply_down: jump to later reply
       deleted: "The issue has been deleted"
@@ -1293,7 +1293,7 @@ en:
       auto_close_immediate: "The last post in the issue is already %{hours} hours old, so the issue will be closed immediately."
 
       progress:
-        title: topic progress
+        title: issue progress
         go_top: "top"
         go_bottom: "bottom"
         go: "go"
@@ -1305,20 +1305,20 @@ en:
 
       notifications:
         reasons:
-          "3_6": 'You will receive notifications because you are watching this category.'
-          "3_5": 'You will receive notifications because you started watching this topic automatically.'
-          "3_2": 'You will receive notifications because you are watching this topic.'
-          "3_1": 'You will receive notifications because you created this topic.'
-          "3": 'You will receive notifications because you are watching this topic.'
-          "2_8": 'You will receive notifications because you are tracking this category.'
-          "2_4": 'You will receive notifications because you posted a reply to this topic.'
-          "2_2": 'You will receive notifications because you are tracking this topic.'
-          "2": 'You will receive notifications because you <a href="/users/{{username}}/preferences">read this topic</a>.'
+          "3_6": 'You will receive notifications because you are watching this company.'
+          "3_5": 'You will receive notifications because you started watching this issue automatically.'
+          "3_2": 'You will receive notifications because you are watching this issue.'
+          "3_1": 'You will receive notifications because you created this issue.'
+          "3": 'You will receive notifications because you are watching this issue.'
+          "2_8": 'You will receive notifications because you are tracking this company.'
+          "2_4": 'You will receive notifications because you posted a reply to this issue.'
+          "2_2": 'You will receive notifications because you are tracking this issue.'
+          "2": 'You will receive notifications because you <a href="/users/{{username}}/preferences">read this issue</a>.'
           "1_2": 'You will be notified if someone mentions your @name or replies to you.'
           "1": 'You will be notified if someone mentions your @name or replies to you.'
-          "0_7": 'You are ignoring all notifications in this category.'
-          "0_2": 'You are ignoring all notifications on this topic.'
-          "0": 'You are ignoring all notifications on this topic.'
+          "0_7": 'You are ignoring all notifications in this company.'
+          "0_2": 'You are ignoring all notifications on this issue.'
+          "0": 'You are ignoring all notifications on this issue.'
         watching_pm:
           title: "Watching"
           description: "You will be notified of every new reply in this message, and a count of new replies will be shown."
@@ -1370,7 +1370,7 @@ en:
 
       reply:
         title: 'Reply'
-        help: 'begin composing a reply to this topic'
+        help: 'begin composing a reply to this issue'
 
       clear_pin:
         title: "Clear pin"
@@ -1378,12 +1378,12 @@ en:
 
       share:
         title: 'Share'
-        help: 'share a link to this topic'
+        help: 'share a link to this issue'
 
       flag_topic:
         title: 'Flag'
-        help: 'privately flag this topic for attention or send a private notification about it'
-        success_message: 'You successfully flagged this topic.'
+        help: 'privately flag this issue for attention or send a private notification about it'
+        success_message: 'You successfully flagged this issue.'
 
       feature_topic:
         title: "Feature this issue"
@@ -1431,7 +1431,7 @@ en:
         title: 'Invite'
         username_placeholder: "username"
         action: 'Send Invite'
-        help: 'invite others to this topic via email or notifications'
+        help: 'invite others to this issue via email or notifications'
         to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link, no login required."
         sso_enabled: "Enter the username of the person you'd like to invite to this issue."
         to_topic_blank: "Enter the username or email address of the person you'd like to invite to this issue."
@@ -1711,23 +1711,23 @@ en:
 
     category:
       can: 'can&hellip; '
-      none: '(no category)'
+      none: '(no company)'
       all: 'All companies'
-      choose: 'Select a category&hellip;'
+      choose: 'Select a company&hellip;'
       edit: 'edit'
       edit_long: "Edit"
-      view: 'View Issues in Category'
+      view: 'View Issues in Company'
       general: 'General'
       settings: 'Settings'
       topic_template: "Issue Template"
-      delete: 'Delete Category'
-      create: 'New Category'
-      create_long: 'Create a new category'
-      save: 'Save Category'
-      slug: 'Category Slug'
+      delete: 'Delete Company'
+      create: 'New Company'
+      create_long: 'Create a new company'
+      save: 'Save Company'
+      slug: 'Company Slug'
       slug_placeholder: '(Optional) dashed-words for url'
-      creation_error: There has been an error during the creation of the category.
-      save_error: There was an error saving the category.
+      creation_error: There has been an error during the creation of the company.
+      save_error: There was an error saving the company.
       name: "Company Name"
       description: "Description"
       topic: "company issue"
@@ -1743,9 +1743,9 @@ en:
       list: "List Companies"
       no_description: "Please add a description for this company."
       change_in_category_topic: "Edit Description"
-      already_used: 'This color has been used by another category'
+      already_used: 'This color has been used by another company'
       security: "Security"
-      special_warning: "Warning: This category is a pre-seeded company and the security settings cannot be edited. If you do not wish to use this company, delete it instead of repurposing it."
+      special_warning: "Warning: This company is a pre-seeded company and the security settings cannot be edited. If you do not wish to use this company, delete it instead of repurposing it."
       images: "Images"
       auto_close_label: "Auto-close issues after:"
       auto_close_units: "hours"
@@ -1844,7 +1844,7 @@ en:
     posts_lowercase: "posts"
     posts_long: "there are {{number}} posts in this issue"
     posts_likes_MF: |
-      This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
+      This issue has {count, plural, one {1 reply} other {# replies}} {ratio, select,
         low {with a high like to post ratio}
         med {with a very high like to post ratio}
         high {with an extremely high like to post ratio}
@@ -2751,7 +2751,7 @@ en:
           modal_title: Badge Groupings
         granted_by: Granted By
         granted_at: Granted At
-        reason_help: (A link to a post or topic)
+        reason_help: (A link to a post or issue)
         save: Save
         delete: Delete
         delete_confirm: Are you sure you want to delete this badge?
@@ -2869,7 +2869,7 @@ en:
         latest: '<b>g</b>, <b>l</b> Latest'
         new: '<b>g</b>, <b>n</b> New'
         unread: '<b>g</b>, <b>u</b> Unread'
-        categories: '<b>g</b>, <b>c</b> Categories'
+        categories: '<b>g</b>, <b>c</b> Companies'
         top: '<b>g</b>, <b>t</b> Top'
         bookmarks: '<b>g</b>, <b>b</b> Bookmarks'
         profile: '<b>g</b>, <b>p</b> Profile'
@@ -2879,11 +2879,11 @@ en:
         jump: '<b>#</b> Go to post #'
         back: '<b>u</b> Back'
         up_down: '<b>k</b>/<b>j</b> Move selection &uarr; &darr;'
-        open: '<b>o</b> or <b>Enter</b> Open selected topic'
+        open: '<b>o</b> or <b>Enter</b> Open selected issue'
         next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Next/previous section'
       application:
         title: 'Application'
-        create: '<b>c</b> Create a new topic'
+        create: '<b>c</b> Create a new issue'
         notifications: '<b>n</b> Open notifications'
         hamburger_menu: '<b>=</b> Open hamburger menu'
         user_profile_menu: '<b>p</b> Open user menu'
@@ -2895,12 +2895,12 @@ en:
         log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Log Out'
       actions:
         title: 'Actions'
-        bookmark_topic: '<b>f</b> Toggle bookmark topic'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> Pin/Unpin topic'
-        share_topic: '<b>shift</b>+<b>s</b> Share topic'
+        bookmark_topic: '<b>f</b> Toggle bookmark issue'
+        pin_unpin_topic: '<b>shift</b>+<b>p</b> Pin/Unpin issue'
+        share_topic: '<b>shift</b>+<b>s</b> Share issue'
         share_post: '<b>s</b> Share post'
-        reply_as_new_topic: '<b>t</b> Reply as linked topic'
-        reply_topic: '<b>shift</b>+<b>r</b> Reply to topic'
+        reply_as_new_topic: '<b>t</b> Reply as linked issue'
+        reply_topic: '<b>shift</b>+<b>r</b> Reply to issue'
         reply_post: '<b>r</b> Reply to post'
         quote_post: '<b>q</b> Quote post'
         like: '<b>l</b> Like post'
@@ -2908,10 +2908,10 @@ en:
         bookmark: '<b>b</b> Bookmark post'
         edit: '<b>e</b> Edit post'
         delete: '<b>d</b> Delete post'
-        mark_muted: '<b>m</b>, <b>m</b> Mute topic'
-        mark_regular: '<b>m</b>, <b>r</b> Regular (default) topic'
-        mark_tracking: '<b>m</b>, <b>t</b> Track topic'
-        mark_watching: '<b>m</b>, <b>w</b> Watch topic'
+        mark_muted: '<b>m</b>, <b>m</b> Mute issue'
+        mark_regular: '<b>m</b>, <b>r</b> Regular (default) issue'
+        mark_tracking: '<b>m</b>, <b>t</b> Track issue'
+        mark_watching: '<b>m</b>, <b>w</b> Watch issue'
 
     badges:
       earned_n_times:
