@@ -19,9 +19,9 @@
 required:
   title:
     client: true
-    default: 'Discourse'
+    default: 'Open Companies'
   site_description:
-    default: ''
+    default: 'Open Companies'
   contact_email:
     client: true
     default: ''
@@ -30,7 +30,7 @@ required:
     client: true
     default: ''
   notification_email:
-    default: 'noreply@unconfigured.discourse.org'
+    default: 'noreply@open.xyz'
     type: email
     shadowed_by_global: true
   site_contact_username:
@@ -38,19 +38,19 @@ required:
     type: username
   logo_url:
     client: true
-    default: '/images/d-logo-sketch.png'
+    default: '/images/logo@2x.png'
   logo_small_url:
     client: true
-    default: '/images/d-logo-sketch-small.png'
+    default: '/images/logo-single@2x.png'
   digest_logo_url:
     default: ''
   mobile_logo_url:
     client: true
-    default: ''
+    default: '/images/logo-single@2x.png'
   favicon_url:
     client: true
-    default: '/images/default-favicon.ico'
-  apple_touch_icon_url: '/images/default-apple-touch-icon.png'
+    default: '/images/favicon.ico'
+  apple_touch_icon_url: '/images/apple-touch-icon.png'
   exclude_rel_nofollow_domains:
     default: ''
     type: list
@@ -93,7 +93,7 @@ basic:
     client: true
     refresh: true
     type: list
-    default: "latest|new|unread|top|categories"
+    default: "categories|latest|new|unread|top"
     regex: "latest"
     regex_error: "site_settings.errors.must_include_latest"
     choices:
