@@ -72,7 +72,7 @@ basic:
     default: 5
     min: 0
   limit_suggested_to_category:
-    default: false
+    default: true
   track_external_right_clicks:
     client: true
     default: false
@@ -183,7 +183,7 @@ basic:
     min: 1
   fixed_category_positions:
     client: true
-    default: false
+    default: true
 
   fixed_category_positions_on_create:
     client: true
@@ -410,7 +410,7 @@ posting:
     min: 1
   allow_uncategorized_topics:
     client: true
-    default: true
+    default: false
     refresh: true
   allow_duplicate_topic_titles: false
   min_title_similar_length:
