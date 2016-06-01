@@ -116,7 +116,7 @@ export default {
 
   _jumpTo(direction) {
     if ($('.container.posts').length) {
-      this.container.lookup('controller:topic-progress').send(direction);
+      this.container.lookup('controller:topic').send(direction);
     }
   },
 
@@ -159,7 +159,7 @@ export default {
   },
 
   toggleProgress() {
-    this.container.lookup('controller:topic-progress').send('toggleExpansion', {highlight: true});
+    this.appEvents.trigger('topic-progress:keyboard-trigger', { type: 'jump' });
   },
 
   toggleSearch(event) {

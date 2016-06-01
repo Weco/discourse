@@ -10,20 +10,38 @@ import DiscourseURL from 'discourse/lib/url';
 import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
-  needs: ['modal', 'composer', 'quote-button', 'topic-progress', 'application'],
+  needs: ['modal', 'composer', 'quote-button', 'application'],
   multiSelect: false,
   allPostsSelected: false,
   editingTopic: false,
   selectedPosts: null,
   selectedReplies: null,
   queryParams: ['filter', 'username_filters', 'show_deleted'],
-  loadedAllPosts: Em.computed.or('model.postStream.loadedAllPosts', 'model.postStream.loadingLastPost'),
+  loadedAllPosts: Ember.computed.or('model.postStream.loadedAllPosts', 'model.postStream.loadingLastPost'),
   enteredAt: null,
+  enteredIndex: null,
   retrying: false,
-  adminMenuVisible: false,
+  userTriggeredProgress: null,
+  _progressIndex: null,
 
-  showRecover: Em.computed.and('model.deleted', 'model.details.can_recover'),
-  isFeatured: Em.computed.or("model.pinned_at", "model.isBanner"),
+  topicDelegated: [
+    'toggleMultiSelect',
+    'deleteTopic',
+    'recoverTopic',
+    'toggleClosed',
+    'showAutoClose',
+    'showFeatureTopic',
+    'showChangeTimestamp',
+    'toggleArchived',
+    'toggleVisibility',
+    'convertToPublicTopic',
+    'convertToPrivateMessage',
+    'jumpTop',
+    'jumpToPost',
+    'jumpToIndex',
+    'jumpBottom',
+    'replyToPost'
+  ],
 
   _titleChanged: function() {
     const title = this.get('model.title');
@@ -176,18 +194,35 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       return this.get('model.postStream').fillGapAfter(args.post, args.gap);
     },
 
+    currentPostChanged(event) {
+      const { post } = event;
+      if (!post) { return; }
+
+      const postNumber = post.get('post_number');
+      const model = this.get('model');
+      model.set('currentPost', postNumber);
+      this.send('postChangedRoute', postNumber);
+
+      const postStream = model.get('postStream');
+
+      this._progressIndex = postStream.progressIndexOfPost(post);
+      this.appEvents.trigger('topic:current-post-changed', this._progressIndex);
+    },
+
+    currentPostScrolled(event) {
+      this.appEvents.trigger('topic:current-post-scrolled', {
+        postIndex: this._progressIndex,
+        percent: event.percent
+      });
+    },
+
     // Called the the topmost visible post on the page changes.
     topVisibleChanged(event) {
       const { post, refresh } = event;
-
       if (!post) { return; }
 
       const postStream = this.get('model.postStream');
       const firstLoadedPost = postStream.get('posts.firstObject');
-
-      const currentPostNumber = post.get('post_number');
-      this.set('model.currentPost', currentPostNumber);
-      this.send('postChangedRoute', currentPostNumber);
 
       if (post.get('post_number') === 1) { return; }
 
@@ -196,14 +231,12 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       }
     },
 
-    //  Called the the bottommost visible post on the page changes.
+    // Called the the bottommost visible post on the page changes.
     bottomVisibleChanged(event) {
       const { post, refresh } = event;
 
       const postStream = this.get('model.postStream');
       const lastLoadedPost = postStream.get('posts.lastObject');
-
-      this.set('controllers.topic-progress.progressPosition', postStream.progressIndexOfPost(post));
 
       if (lastLoadedPost && lastLoadedPost === post && postStream.get('canAppendMore')) {
         postStream.appendMore().then(() => refresh());
@@ -218,14 +251,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     removeAllowedUser(user) {
       return this.get('model.details').removeAllowedUser(user);
-    },
-
-    showTopicAdminMenu() {
-      this.set('adminMenuVisible', true);
-    },
-
-    hideTopicAdminMenu() {
-      this.set('adminMenuVisible', false);
     },
 
     deleteTopic() {
@@ -378,8 +403,20 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       }
     },
 
+    jumpToIndex(index) {
+      this._jumpToPostId(this.get('model.postStream.stream')[index-1]);
+    },
+
+    jumpToPost(postNumber) {
+      this._jumpToPostId(this.get('model.postStream').findPostIdForPostNumber(postNumber));
+    },
+
     jumpTop() {
-      this.get('controllers.topic-progress').send('jumpTop');
+      DiscourseURL.routeTo(this.get('model.firstPostUrl'), { skipIfOnScreen: false });
+    },
+
+    jumpBottom() {
+      DiscourseURL.routeTo(this.get('model.lastPostUrl'), { skipIfOnScreen: false });
     },
 
     selectAll() {
@@ -609,6 +646,25 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     }
   },
 
+  _jumpToPostId(postId) {
+    if (!postId) {
+      Ember.Logger.warn("jump-post code broken - requested an index outside the stream array");
+      return;
+    }
+
+    const topic = this.get('model');
+    const postStream = topic.get('postStream');
+    const post = postStream.findLoadedPost(postId);
+    if (post) {
+      DiscourseURL.routeTo(topic.urlForPostNumber(post.get('post_number')));
+    } else {
+      // need to load it
+      postStream.findPostsByIds([postId]).then(arr => {
+        DiscourseURL.routeTo(topic.urlForPostNumber(arr[0].get('post_number')));
+      });
+    }
+  },
+
   togglePinnedState() {
     this.send('togglePinnedForUser');
   },
@@ -793,13 +849,24 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     if (topic.get('id') === topicId) {
 
+      let highestReadPostId = 0;
+
       // TODO identity map for postNumber
       postStream.get('posts').forEach(post => {
         if (!post.read && postNumbers.indexOf(post.post_number) !== -1) {
+          const id = post.get('id');
+          if (id > highestReadPostId) {
+            highestReadPostId = id;
+          }
+
           post.set('read', true);
-          this.appEvents.trigger('post-stream:refresh', { id: post.id });
+          this.appEvents.trigger('post-stream:refresh', { id });
         }
       });
+
+      if (highestReadPostId > 0) {
+        topic.set('last_read_post_id', highestReadPostId);
+      }
 
       const max = _.max(postNumbers);
       if (max > topic.get("last_read_post_number")) {
