@@ -35,6 +35,15 @@
   {{raw "list/posters-column" posters=topic.posters}}
 {{/if}}
 
+{{#if siteSettings.reputation_enabled}}
+<td class="num rating">
+    {{#if topic.has_rating}}
+        {{topic.rating_count}}
+    {{else}}
+        0
+    {{/if}}
+</td>
+{{/if}}
 {{raw "list/posts-count-column" topic=topic}}
 
 {{#if showParticipants}}

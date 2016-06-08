@@ -354,7 +354,7 @@ users:
     default: ''
   staff_user_custom_fields:
     type: list
-    default: ''
+    default: 'reputation'
   enable_user_directory:
     client: true
     default: true

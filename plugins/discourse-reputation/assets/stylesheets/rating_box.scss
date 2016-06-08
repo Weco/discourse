@@ -1,0 +1,43 @@
+$lightTextColor: #ccc;
+
+.rating_box {
+    width: 45px;
+}
+
+.rating_box__button {
+    width: 24px;
+    height: 20px;
+    margin: 16px auto;
+    cursor: pointer;
+
+    &:before {
+        content: '';
+        display: block;
+        border-style: solid;
+    }
+}
+
+.rating_box__button--up {
+    &:before {
+        border-width: 0 12px 20px;
+        border-color: transparent transparent $lightTextColor;
+    }
+}
+
+.rating_box__button--down {
+    &:before {
+        border-width: 20px 12px 0;
+        border-color: $lightTextColor transparent transparent;
+    }
+}
+
+.rating_box__count {
+    text-align: center;
+    font: 21px/24px Arial;
+    width: 85px;
+    margin-left: -20px;
+}
+
+.rating_box__count--small {
+    font-size: 16px;
+}

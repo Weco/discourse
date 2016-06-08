@@ -10,6 +10,9 @@
 {{#if showPosters}}
   {{raw "topic-list-header-column" order='posters' name='users'}}
 {{/if}}
+{{#if siteSettings.reputation_enabled}}
+  {{raw "topic-list-header-column" sortable=sortable number='true' order='votes' name='votes'}}
+{{/if}}
 {{raw "topic-list-header-column" sortable=sortable number='true' order='posts' name='replies'}}
 {{#if showParticipants}}
   {{raw "topic-list-header-column" order='participants' name='users'}}

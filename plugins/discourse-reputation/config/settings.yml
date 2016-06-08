@@ -1,0 +1,19 @@
+plugins:
+  reputation_enabled:
+    default: true
+    client: true
+  reputation_min_value_to_vote_up:
+    default: 15
+    client: true
+  reputation_min_value_to_vote_down:
+    default: 125
+    client: true
+  reputation_min_value_to_create_tag:
+    default: 1500
+    client: true
+  reputation_min_value_to_edit_topics:
+    default: 2000
+    client: true
+  reputation_min_value_to_delete_topics:
+    default: 5000
+    client: true

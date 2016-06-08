@@ -1,0 +1,12 @@
+en:
+  site_settings:
+    reputation enabled: 'Enable reputation plugin'
+    reputation_min_value_to_vote_up: 'Minimal value of reputation to be able vote up for topics and posts'
+    reputation_min_value_to_vote_down: 'Minimum value of reputation to be able vote down for topics and posts'
+    reputation_min_value_to_create_tag: 'Minimum value of reputation to be able create new tags'
+    reputation_min_value_to_edit_topics: 'Minimum value of reputation to be able edit topics and posts'
+    reputation_min_value_to_delete_topics: 'Minimum value of reputation to be able delete topics and posts'
+  reputation:
+    already_voted: 'You have already voted'
+    cant_vote_for_own_post: "You can't vote for your post"
+    not_enough_reputation_for_vote: 'You should have at least %{min} points of reputation to vote %{type}'

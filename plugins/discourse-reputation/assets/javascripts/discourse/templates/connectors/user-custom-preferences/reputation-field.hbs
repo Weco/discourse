@@ -1,0 +1,8 @@
+{{#if currentUser.admin}}
+<div class="control-group pref-location">
+    <label class="control-label">{{i18n 'reputation'}}</label>
+    <div class="controls">
+        {{input type="text" value=model.custom_fields.reputation class="input-xxlarge" id='edit-reputation'}}
+    </div>
+</div>
+{{/if}}
