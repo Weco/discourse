@@ -24,7 +24,7 @@ module DiscourseReputation
       type = value == 1 ? 'up' : 'down'
       min_reputation = SiteSetting.send("reputation_min_value_to_vote_#{type}")
 
-      if current_user.reputation.to_i < min_reputation.to_i
+      if !current_user.staff? && current_user.reputation.to_i < min_reputation.to_i
         return render_json_error(I18n.t("reputation.not_enough_reputation_for_vote", min: min_reputation, type: type))
       end
 

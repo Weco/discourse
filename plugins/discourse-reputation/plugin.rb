@@ -148,11 +148,12 @@ after_initialize do
   require_dependency 'user'
   class ::User
     def reputation
-      if self.custom_fields["reputation"]
-        return self.custom_fields["reputation"]
-      else
-        return 1
+      if !self.custom_fields["reputation"]
+        self.custom_fields["reputation"] = 1
+        self.save_custom_fields(true)
       end
+
+      return self.custom_fields["reputation"]
     end
   end
 
@@ -164,7 +165,7 @@ after_initialize do
   module UsersControllerExtension
     def update
       # filter reputation for non-staff users
-      if params[:custom_fields][:reputation] && !current_user.staff?
+      if params["custom_fields"] && params["custom_fields"]["reputation"] && !current_user.staff?
         params[:custom_fields].delete :reputation
       end
 
