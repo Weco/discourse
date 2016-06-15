@@ -18,18 +18,18 @@ export default MountWidget.extend(Docking, {
              dockBottom: this.dockBottom };
   },
 
-  @observes('topic.highest_post_number')
+  @observes('topic.highest_post_number', 'loading')
   newPostAdded() {
     this.queueRerender(() => this.queueDockCheck());
   },
 
   dockCheck(info) {
-    if (this.get('loading')) { return; }
-
-    const topicTop = $('.container.posts').offset().top;
+    const mainOffset = $('#main').offset();
+    const offsetTop = mainOffset ? mainOffset.top : 0;
+    const topicTop = $('.container.posts').offset().top - offsetTop;
     const topicBottom = $('#topic-bottom').offset().top;
     const $timeline = this.$('.timeline-container');
-    const timelineHeight = $timeline.height();
+    const timelineHeight = $timeline.height() || 400;
     const footerHeight = $('.timeline-footer-controls').outerHeight(true) || 0;
 
     const prev = this.dockAt;
@@ -39,7 +39,7 @@ export default MountWidget.extend(Docking, {
     this.dockBottom = false;
     if (posTop < topicTop) {
       this.dockAt = topicTop;
-    } else if (pos > topicBottom) {
+    } else if (pos > topicBottom + footerHeight) {
       this.dockAt = (topicBottom - timelineHeight) + footerHeight;
       this.dockBottom = true;
       if (this.dockAt < 0) { this.dockAt = 0; }
@@ -55,10 +55,5 @@ export default MountWidget.extend(Docking, {
   didInsertElement() {
     this._super();
     this.dispatch('topic:current-post-scrolled', 'timeline-scrollarea');
-  },
-
-  willDestroyElement() {
-    this._super();
-    this.appEvents.off('topic:current-post-scrolled');
   }
 });

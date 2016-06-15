@@ -9,16 +9,16 @@ export default Ember.Component.extend({
   progressPosition: null,
   postStream: Ember.computed.alias('topic.postStream'),
   userWantsToJump: null,
-  composerVisible: null,
+  _streamPercentage: null,
 
   init() {
     this._super();
     (this.get('delegated') || []).forEach(m => this.set(m, m));
   },
 
-  @computed('userWantsToJump', 'showTimeline', 'composerVisible')
-  hidden(userWantsToJump, showTimeline, composerVisible) {
-    return !userWantsToJump && !composerVisible && showTimeline;
+  @computed('userWantsToJump', 'showTimeline')
+  hidden(userWantsToJump, showTimeline) {
+    return !userWantsToJump && showTimeline;
   },
 
   @observes('hidden')
@@ -34,14 +34,6 @@ export default Ember.Component.extend({
       this.set('userWantsToJump', true);
       Ember.run.scheduleOnce('afterRender', () => this.$('.jump-form input').focus());
     }
-  },
-
-  @computed('postStream.loaded', 'progressPosition', 'postStream.filteredPostsCount', 'postStream.highest_post_number')
-  streamPercentage(loaded, progressPosition, filteredPostsCount, highestPostNumber) {
-    if (!loaded) { return 0; }
-    if (highestPostNumber === 0) { return 0; }
-    const perc = progressPosition / filteredPostsCount;
-    return (perc > 1.0) ? 1.0 : perc;
   },
 
   @computed('progressPosition')
@@ -73,30 +65,25 @@ export default Ember.Component.extend({
     }
   },
 
-  @observes('streamPercentage', 'postStream.stream.[]')
+  @observes('postStream.stream.[]')
   _updateBar() {
     Ember.run.scheduleOnce('afterRender', this, this._updateProgressBar);
   },
 
-  _composerOpened() {
-    this.set('composerVisible', true);
-    this._dock();
-  },
-
-  _composerWillClose() {
-    this.set('composerVisible', false);
+  _topicScrolled(event) {
+    this.set('progressPosition', event.postIndex);
+    this._streamPercentage = event.percent;
+    this._updateBar();
   },
 
   didInsertElement() {
     this._super();
 
-    this.appEvents.on('composer:opened', this, this._composerOpened);
-    this.appEvents.on('composer:will-close', this, this._composerWillClose);
-
-    this.appEvents.on("composer:resized", this, this._dock)
+    this.appEvents.on('composer:will-open', this, this._dock)
+                  .on("composer:resized", this, this._dock)
                   .on('composer:closed', this, this._dock)
                   .on("topic:scrolled", this, this._dock)
-                  .on('topic:current-post-changed', postNumber => this.set('progressPosition', postNumber))
+                  .on('topic:current-post-scrolled', this, this._topicScrolled)
                   .on('topic-progress:keyboard-trigger', this, this.keyboardTrigger);
 
     Ember.run.scheduleOnce('afterRender', this, this._updateProgressBar);
@@ -104,18 +91,16 @@ export default Ember.Component.extend({
 
   willDestroyElement() {
     this._super();
-    this.appEvents.off('composer:opened', this, this._composerOpened);
-    this.appEvents.off('composer:will-close', this, this._composerWillClose);
-    this.appEvents.off("composer:resized", this, this._dock)
+    this.appEvents.off('composer:will-open', this, this._dock)
+                  .off("composer:resized", this, this._dock)
                   .off('composer:closed', this, this._dock)
                   .off('topic:scrolled', this, this._dock)
-                  .off('topic:current-post-changed')
+                  .off('topic:current-post-scrolled', this, this._topicScrolled)
                   .off('topic-progress:keyboard-trigger');
   },
 
   _updateProgressBar() {
-    if (this.isDestroyed || this.isDestroying) { return; }
-    if (this.get('hidden')) { return; }
+    if (this.isDestroyed || this.isDestroying || this.get('hidden')) { return; }
 
     const $topicProgress = this.$('#topic-progress');
     // speeds up stuff, bypass jquery slowness and extra checks
@@ -123,7 +108,7 @@ export default Ember.Component.extend({
       this._totalWidth = $topicProgress[0].offsetWidth;
     }
     const totalWidth = this._totalWidth;
-    const progressWidth = this.get('streamPercentage') * totalWidth;
+    const progressWidth = (this._streamPercentage || 0) * totalWidth;
 
     const borderSize = (progressWidth === totalWidth) ? "0px" : "1px";
     const $bg = $topicProgress.find('.bg');
@@ -139,19 +124,17 @@ export default Ember.Component.extend({
     const maximumOffset = $('#topic-footer-buttons').offset(),
           composerHeight = $('#reply-control').height() || 0,
           $topicProgressWrapper = this.$(),
-          offset = window.pageYOffset || $('html').scrollTop();
+          offset = window.pageYOffset || $('html').scrollTop(),
+          topicProgressHeight = $('#topic-progress').height();
 
     let isDocked = false;
     if (maximumOffset) {
-      const threshold = maximumOffset.top,
-            windowHeight = $(window).height(),
-            topicProgressHeight = $('#topic-progress').height();
-
+      const threshold = maximumOffset.top;
+      const windowHeight = $(window).height();
       isDocked = offset >= threshold - windowHeight + topicProgressHeight + composerHeight;
     }
 
     const dockPos = $(document).height() - $('#topic-bottom').offset().top;
-
     if (composerHeight > 0) {
       if (isDocked) {
         $topicProgressWrapper.css('bottom', dockPos);

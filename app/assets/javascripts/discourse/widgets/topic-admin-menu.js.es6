@@ -29,7 +29,7 @@ createWidget('topic-admin-menu-button', {
 
     const result = [];
     result.push(this.attach('button', {
-      className: 'btn no-text' + (attrs.fixed ? " show-topic-admin" : ""),
+      className: 'btn ' + (attrs.fixed ? " show-topic-admin" : ""),
       title: 'topic_admin_menu',
       icon: 'wrench',
       action: 'showAdminMenu',
@@ -73,7 +73,7 @@ export default createWidget('topic-admin-menu', {
     const position = attrs.fixed ? 'fixed' : 'absolute';
 
     if (attrs.openUpwards) {
-      const bottom = $(document).height() - top;
+      const bottom = $(document).height() - top - $('#main').offset().top;
       return { style: `position: ${position}; bottom: ${bottom}px; left: ${left}px;` };
     } else {
       return { style: `position: ${position}; top: ${top}px; left: ${left}px;` };
@@ -144,7 +144,7 @@ export default createWidget('topic-admin-menu', {
     const visible = topic.get('visible');
     buttons.push({ className: 'topic-admin-visible',
                    action: 'toggleVisibility',
-                   icon: visible ? 'eye' : 'eye-slash',
+                   icon: visible ? 'eye-slash' : 'eye',
                    label: visible ? 'actions.invisible' : 'actions.visible' });
 
     if (this.currentUser.get('staff')) {

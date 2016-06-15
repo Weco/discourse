@@ -296,7 +296,7 @@ createWidget('post-contents', {
 });
 
 createWidget('post-body', {
-  tagName: 'div.topic-body',
+  tagName: 'div.topic-body.clearfix',
 
   html(attrs) {
     const postContents = this.attach('post-contents', attrs);
@@ -384,7 +384,7 @@ export default createWidget('post', {
   shadowTree: true,
 
   buildAttributes(attrs) {
-    return attrs.cloaked ? { style: `height: ${attrs.height}px` } : undefined;
+    return attrs.height ? { style: `min-height: ${attrs.height}px` } : undefined;
   },
 
   buildId(attrs) {

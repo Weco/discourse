@@ -120,7 +120,7 @@ createWidget('timeline-scrollarea', {
 
     if (lastReadId && lastReadNumber) {
       const idx = postStream.get('stream').indexOf(lastReadId) + 1;
-      result.lastRead = lastReadNumber;
+      result.lastRead = idx;
       result.lastReadPercentage = this._percentFor(topic, idx);
     }
 
@@ -143,9 +143,9 @@ createWidget('timeline-scrollarea', {
       this.attach('timeline-padding', { height: after })
     ];
 
-    if (position.lastRead && position.lastRead < attrs.topic.posts_count) {
+    if (position.lastRead && position.lastRead !== position.total) {
       const lastReadTop = Math.round(position.lastReadPercentage * SCROLLAREA_HEIGHT);
-      if (lastReadTop > (before + SCROLLER_HEIGHT)) {
+      if ((lastReadTop > (before + SCROLLER_HEIGHT)) && (lastReadTop < (SCROLLAREA_HEIGHT - SCROLLER_HEIGHT))) {
         result.push(this.attach('timeline-last-read', { top: lastReadTop, lastRead: position.lastRead }));
       }
     }
@@ -170,9 +170,7 @@ createWidget('timeline-scrollarea', {
   },
 
   topicCurrentPostScrolled(event) {
-    const { postIndex, percent } = event;
-
-    this.state.percentage = this._percentFor(this.attrs.topic, parseFloat(postIndex) + percent);
+    this.state.percentage = event.percent;
   },
 
   _percentFor(topic, postIndex) {
@@ -213,13 +211,13 @@ export default createWidget('topic-timeline', {
 
     if (stream.length < 3) { return; }
 
-    const rawLabel = relativeAge(new Date(topic.last_posted_at), { addAgo: true, defaultFormat: timelineDate });
 
     let result = [];
     if (currentUser && currentUser.get('canManageTopic')) {
       result.push(h('div.timeline-controls', this.attach('topic-admin-menu-button', { topic })));
     }
 
+    const bottomAge = relativeAge(new Date(topic.last_posted_at), { addAgo: true, defaultFormat: timelineDate });
     result = result.concat([this.attach('link', {
                               className: 'start-date',
                               rawLabel: timelineDate(createdAt),
@@ -228,8 +226,7 @@ export default createWidget('topic-timeline', {
                             this.attach('timeline-scrollarea', attrs),
                             this.attach('link', {
                               className: 'now-date',
-                              icon: 'dot-circle-o',
-                              rawLabel,
+                              rawLabel: bottomAge,
                               action: 'jumpBottom'
                             })]);
 
@@ -239,7 +236,6 @@ export default createWidget('topic-timeline', {
         controls.push(this.attach('button', {
           className: 'btn btn-primary create',
           icon: 'reply',
-          label: 'topic.reply.title',
           title: 'topic.reply.help',
           action: 'replyToPost'
         }));
