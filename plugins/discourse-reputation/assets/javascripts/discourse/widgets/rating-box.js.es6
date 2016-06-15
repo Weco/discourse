@@ -37,7 +37,7 @@ export default createWidget('rating-box', {
             const post = topicController && topicController.get('model.postStream.posts').findBy('id', this.attrs.id);
 
             if (post) {
-                post.set('rating_count', result.rating_count);
+                post.set('rating', result.rating);
             }
         })
         .catch(error => {

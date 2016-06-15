@@ -9,7 +9,7 @@ export default {
             @property('custom_fields.reputation')
             reputation: {
                 get(value) {
-                    return value
+                    return value;
                 },
                 set(value) {
                     this.set("custom_fields.reputation", value);

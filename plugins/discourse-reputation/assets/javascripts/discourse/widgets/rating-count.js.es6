@@ -6,12 +6,12 @@ export default createWidget('rating-count', {
     buildKey: () => 'rating-count',
 
     buildClasses(attrs, state) {
-        if (attrs.rating_count.toString().length > 4) {
+        if (attrs.rating.toString().length > 4) {
             return 'rating_box__count--small';
         }
     },
 
     html(attrs, state) {
-        return attrs.rating_count.toString();
+        return attrs.rating.toString();
     }
 });

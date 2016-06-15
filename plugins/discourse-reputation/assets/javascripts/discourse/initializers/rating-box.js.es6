@@ -17,7 +17,7 @@ export default {
                 }
             });
 
-            api.includePostAttributes('has_rating', 'rating_count');
+            api.includePostAttributes('has_rating', 'rating');
             api.decorateWidget('post-avatar:after', helper => {
                 const { attrs } = helper;
 

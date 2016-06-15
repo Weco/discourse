@@ -11,26 +11,26 @@ load File.expand_path('../lib/discourse_reputation/engine.rb', __FILE__)
 after_initialize do
   require_dependency 'post_serializer'
   class ::PostSerializer
-    attributes :has_rating, :rating_count
+    attributes :has_rating, :rating
 
     def has_rating
       object.topic.tags.map(&:name).include?('problem')
     end
 
-    def rating_count
-      object.rating_count.to_i
+    def rating
+      object.rating.to_i
     end
   end
 
   require_dependency 'post'
   class ::Post
-    def rating_count
-      if self.custom_fields["rating_count"]
-        return self.custom_fields["rating_count"]
+    def rating
+      if self.custom_fields["rating"]
+        return self.custom_fields["rating"]
       else
         Set.new(
           PostCustomField
-            .where(name: "rating_count", value: 0)
+            .where(name: "rating", value: 0)
             .pluck(:post_id)
         )
         return 0
@@ -38,19 +38,22 @@ after_initialize do
     end
   end
 
+  Post.register_custom_field_type('votes', :json)
+  Post.register_custom_field_type('rating', :integer)
+
   require_dependency 'topic'
   class ::Topic
     def has_rating
       self.tags.map(&:name).include?('problem')
     end
 
-    def rating_count
-      if self.custom_fields["rating_count"]
-        return self.custom_fields["rating_count"]
+    def rating
+      if self.custom_fields["rating"]
+        return self.custom_fields["rating"]
       else
         Set.new(
           TopicCustomField
-            .where(name: "rating_count", value: 0)
+            .where(name: "rating", value: 0)
             .pluck(:topic_id)
         )
         return 0
@@ -58,7 +61,7 @@ after_initialize do
     end
   end
 
-  add_to_serializer(:topic_list_item, :rating_count) { object.rating_count }
+  add_to_serializer(:topic_list_item, :rating) { object.rating }
   add_to_serializer(:topic_list_item, :has_rating) { object.has_rating }
 
   class ::Guardian
@@ -179,12 +182,12 @@ after_initialize do
 
   require_dependency 'topic_query'
   class ::TopicQuery
-    SORTABLE_MAPPING["votes"] = "custom_fields.rating_count"
+    SORTABLE_MAPPING["votes"] = "custom_fields.rating"
   end
 
   Discourse::Application.routes.append do
     mount ::DiscourseReputation::Engine, at: "/rating"
   end
 
-  TopicList.preloaded_custom_fields << "rating_count" if TopicList.respond_to? :preloaded_custom_fields
+  TopicList.preloaded_custom_fields << "rating" if TopicList.respond_to? :preloaded_custom_fields
 end

@@ -21,43 +21,66 @@ module DiscourseReputation
         return render_json_error(I18n.t("reputation.cant_vote_for_own_post"))
       end
 
-      type = value == 1 ? 'up' : 'down'
+      is_up = value == 1
+      type = is_up ? 'up' : 'down'
       min_reputation = SiteSetting.send("reputation_min_value_to_vote_#{type}")
 
       if !current_user.staff? && current_user.reputation.to_i < min_reputation.to_i
         return render_json_error(I18n.t("reputation.not_enough_reputation_for_vote", min: min_reputation, type: type))
       end
 
-      rated_users = post.custom_fields["rated_users"]
+      votes = post.custom_fields["votes"]
 
-      if !rated_users.kind_of?(Array)
-        rated_users = rated_users.kind_of?(String) ? [rated_users] : []
+      if !votes.kind_of?(Hash)
+        votes = {}
       end
 
-      if !rated_users.map(&:to_i).include?(current_user.id)
-        post.custom_fields["rating_count"] = [(post.custom_fields["rating_count"].to_i + value), 0].max
-        post.custom_fields["rated_users"] = rated_users.dup.push(current_user.id)
+      current_user_vote = votes[current_user.id.to_s]
+
+      if current_user_vote == nil || current_user_vote['value'] != value
+        is_revote = current_user_vote != nil
+        rating = post.custom_fields["rating"].to_i + value
+
+        if is_revote
+          rating += value
+        end
+
+        votes[current_user.id.to_s] = {
+          value: value,
+          created_at: Time.now
+        }
+        post.custom_fields["rating"] = rating
+        post.custom_fields["votes"] = votes
         post.save_custom_fields(true)
 
         if post.post_number == 1
           topic = Topic.find_by(id: post.topic_id)
-          topic.custom_fields["rating_count"] = post.custom_fields["rating_count"]
+          topic.custom_fields["rating"] = post.custom_fields["rating"]
           topic.save_custom_fields(true)
         end
 
         post_user = User.find_by(id: post.user_id)
 
-        if value == 1
+        if is_up
           value *= post.post_number == 1 ? 10 : 5
         else
           value *= 2
+        end
+
+        # If it's re-voting then roll back changing of user reputation from previous voting
+        if is_revote
+          if is_up
+            value += 2
+          else
+            value -= post.post_number == 1 ? 10 : 5
+          end
         end
 
         post_user.custom_fields["reputation"] = [(post_user.reputation.to_i + value), 1].max
         post_user.save_custom_fields(true)
 
         obj = {
-          rating_count: post.custom_fields["rating_count"].to_i
+          rating: post.custom_fields["rating"].to_i
         }
 
         render json: obj
