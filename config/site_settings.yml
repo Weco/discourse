@@ -480,7 +480,7 @@ posting:
   warn_reviving_old_topic_age: 180
   autohighlight_all_code:
     client: true
-    default: false
+    default: true
   highlighted_languages:
     default: 'apache|bash|cs|cpp|css|coffeescript|diff|xml|http|ini|json|java|javascript|makefile|markdown|nginx|objectivec|ruby|perl|php|python|sql|handlebars'
     choices: 'HighlightJs.languages'
@@ -936,7 +936,7 @@ legal:
 
 backups:
   allow_restore:
-    default: false
+    default: true
   maximum_backups:
     client: true
     default: 5
