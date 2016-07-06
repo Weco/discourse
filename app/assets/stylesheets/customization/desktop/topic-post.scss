@@ -1,0 +1,143 @@
+.topic-meta-data {
+    float: right;
+    margin: 0;
+    padding: 8px;
+    background: blend-primary-secondary(5%);
+
+    #post_1 & {
+        background: blend-primary-secondary(5%);
+    }
+
+    .post-info {
+        float: left;
+    }
+}
+
+.topic-avatar {
+    border-top: none;
+    padding-top: 0;
+    margin-right: 8px;
+    width: 30px;
+
+    img.avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 0;
+    }
+}
+
+.topic-body:first-of-type {
+    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
+}
+
+.post-meta {
+	overflow: hidden;
+	padding-bottom: 8px;
+	position: relative;
+
+    > div {
+        margin-right: 8px;
+        margin-left: 0;
+    }
+
+    .read-state {
+        position: static;
+        top: 0;
+        float: left;
+    }
+}
+
+.post-author {
+    .names {
+        margin-top: 4px;
+    }
+}
+
+section.post-menu-area {
+    float: left;
+    position: static;
+
+    .actions .widget-button {
+        padding: 0 8px 0 0;
+        margin: 0;
+        font-size: 1em;
+        text-transform: lowercase;
+
+        &:hover,
+        &.d-hover {
+            background: none;
+            color: #222;
+        }
+
+        &.share:after {
+            content: 'share';
+        }
+
+        &.edit:after {
+            content: 'edit';
+        }
+
+        &.show-more-actions:after {
+            content: 'more';
+        }
+
+        &.create-flag:after {
+            content: 'flag';
+        }
+
+        &.bookmark:after {
+            content: 'bookmark';
+        }
+
+        &.delete:after {
+            content: 'delete';
+        }
+
+        &.recover:after {
+            content: 'recover';
+        }
+
+        &.show-post-admin-menu:after {
+            content: 'admin';
+        }
+
+        .fa,
+        .read-icon {
+            display: none;
+        }
+    }
+}
+
+.topic-post {
+    .topic-body {
+        padding-bottom: 56px;
+
+        .cooked {
+            font-size: 15px;
+        }
+    }
+
+    .reply .topic-body {
+        padding-bottom: 0;
+    }
+
+    .widget-button.reply {
+        position: absolute;
+        left: 11px;
+        bottom: 20px;
+    }
+
+    &:first-child:last-child {
+        .topic-body {
+            padding-bottom: 15px;
+        }
+
+        .reply .topic-body {
+            padding-bottom: 0;
+        }
+
+        .widget-button.reply {
+            display: none;
+        }
+    }
+}

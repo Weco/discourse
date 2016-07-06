@@ -30,12 +30,11 @@ export default createWidget('embedded-post', {
     return [
       h('div.reply', {attributes: {'data-post-id': attrs.id}}, [
         h('div.row', [
-          this.attach('post-avatar', attrs),
           h('div.topic-body', [
-            h('div.topic-meta-data', [
-              this.attach('post-meta-data', Object.assign({}, attrs, { read: true }))
-            ]),
             new PostCooked(attrs, new DecoratorHelper(this)),
+            this.attach('post-meta-data', attrs, {
+              state: { isReply:  true }
+            }),
             this.attach('post-menu', attrs, {
               state: { collapsed: false }
             })

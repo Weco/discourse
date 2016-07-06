@@ -146,8 +146,8 @@ function showReplyTab(attrs, siteSettings) {
 
 createWidget('post-meta-data', {
   tagName: 'div.topic-meta-data',
-  html(attrs) {
-    const result = [this.attach('poster-name', attrs)];
+  html(attrs, state) {
+    let result = [];
 
     if (attrs.isWhisper) {
       result.push(h('div.post-info.whisper', {
@@ -195,7 +195,14 @@ createWidget('post-meta-data', {
       }
     }, iconNode('circle')));
 
-    return result;
+    if (state.isReply) {
+      return [this.attach('poster-name', attrs)].concat(result);
+    } else {
+      return [
+        h('div.post-meta', result),
+        h('div.post-author', [this.attach('post-avatar', attrs), this.attach('poster-name', attrs)])
+      ];
+    }
   }
 });
 
@@ -263,18 +270,6 @@ createWidget('post-contents', {
       result.push(this.attach('expand-post-button', attrs));
     }
 
-    const extraState = { state: { repliesShown: !!state.repliesBelow.length } };
-    result.push(this.attach('post-menu', attrs, extraState));
-
-    const post = this.findAncestorModel();
-    const replies = post.get('replies');
-
-    if (!Ember.isEmpty(replies)) {
-      result.push(h('section.embedded-posts.bottom', replies.map(model => {
-        return this.attach('embedded-post', transformPost(this.currentUser, this.site, model), { model });
-      })));
-    }
-
     return result;
   },
 
@@ -304,8 +299,19 @@ createWidget('post-body', {
   tagName: 'div.topic-body.clearfix',
 
   html(attrs) {
-    const postContents = this.attach('post-contents', attrs);
-    const result = [this.attach('post-meta-data', attrs), postContents];
+    const result = [
+      this.attach('post-contents', attrs),
+      this.attach('post-meta-data', attrs),
+      this.attach('post-menu', attrs)
+    ];
+    const post = this.findAncestorModel();
+    const replies = post.get('replies');
+
+    if (!Ember.isEmpty(replies)) {
+      result.push(h('section.embedded-posts.bottom', replies.map(model => {
+        return this.attach('embedded-post', transformPost(this.currentUser, this.site, model), { model });
+      })));
+    }
 
     result.push(this.attach('actions-summary', attrs));
     result.push(this.attach('post-links', attrs));
@@ -347,7 +353,7 @@ createWidget('post-article', {
       rows.push(h('div.row', h('section.embedded-posts.top.topic-body.offset2', replies)));
     }
 
-    rows.push(h('div.row', [this.attach('post-avatar', attrs), this.attach('post-body', attrs)]));
+    rows.push(h('div.row', [this.attach('post-body', attrs)]));
     return rows;
   },
 

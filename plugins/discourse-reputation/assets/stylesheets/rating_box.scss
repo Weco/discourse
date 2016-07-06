@@ -1,7 +1,10 @@
 $lightTextColor: #ccc;
 
 .rating_box {
+    float: left;
     width: 45px;
+    padding-top: 12px;
+    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
 }
 
 .rating_box__button {

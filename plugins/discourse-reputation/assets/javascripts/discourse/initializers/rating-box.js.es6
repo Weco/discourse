@@ -18,7 +18,7 @@ export default {
             });
 
             api.includePostAttributes('has_rating', 'rating');
-            api.decorateWidget('post-avatar:after', helper => {
+            api.decorateWidget('post-article:before', helper => {
                 const { attrs } = helper;
 
                 if (attrs.has_rating && attrs.reply_to_post_number == null) {

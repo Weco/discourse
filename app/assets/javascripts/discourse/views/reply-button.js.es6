@@ -9,7 +9,10 @@ export default ButtonView.extend({
     var customTitle = this.get("parentView.replyButtonText" + archetypeCapitalized);
     if (customTitle) { return customTitle; }
 
-    return I18n.t("topic.reply.title");
+    const tags = this.get('controller').model.tags;
+    const isProblem = tags.indexOf('problem') !== -1;
+
+    return I18n.t(`topic.${isProblem ? 'add_solution' : 'reply'}.title`);
   }.property(),
 
   renderIcon: function(buffer) {

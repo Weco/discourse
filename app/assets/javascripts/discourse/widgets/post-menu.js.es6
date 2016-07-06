@@ -135,7 +135,7 @@ registerButton('reply', attrs => {
   if (!attrs.canCreatePost) { return; }
 
   if (!attrs.mobileView) {
-    args.label = 'topic.reply.title';
+    args.label = `topic.${attrs.has_rating ? (attrs.post_number == 1 ? 'add_solution' : 'add_comment') : 'reply'}.title`;
   }
 
   return args;
