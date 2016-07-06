@@ -33,10 +33,12 @@ export default createWidget('embedded-post', {
           this.attach('post-avatar', attrs),
           h('div.topic-body', [
             h('div.topic-meta-data', [
-              this.attach('poster-name', attrs),
-              this.attach('post-link-arrow', { above: state.above, shareUrl: attrs.shareUrl })
+              this.attach('post-meta-data', Object.assign({}, attrs, { read: true }))
             ]),
-            new PostCooked(attrs, new DecoratorHelper(this))
+            new PostCooked(attrs, new DecoratorHelper(this)),
+            this.attach('post-menu', attrs, {
+              state: { collapsed: false }
+            })
           ])
         ])
       ])

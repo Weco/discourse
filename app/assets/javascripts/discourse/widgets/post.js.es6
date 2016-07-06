@@ -2,6 +2,7 @@ import PostCooked from 'discourse/widgets/post-cooked';
 import DecoratorHelper from 'discourse/widgets/decorator-helper';
 import { createWidget, applyDecorators } from 'discourse/widgets/widget';
 import { iconNode } from 'discourse/helpers/fa-icon';
+import transformPost from 'discourse/lib/transform-post';
 import { transformBasicPost } from 'discourse/lib/transform-post';
 import { h } from 'virtual-dom';
 import DiscourseURL from 'discourse/lib/url';
@@ -265,9 +266,13 @@ createWidget('post-contents', {
     const extraState = { state: { repliesShown: !!state.repliesBelow.length } };
     result.push(this.attach('post-menu', attrs, extraState));
 
-    const repliesBelow = state.repliesBelow;
-    if (repliesBelow.length) {
-      result.push(h('section.embedded-posts.bottom', repliesBelow.map(p => this.attach('embedded-post', p))));
+    const post = this.findAncestorModel();
+    const replies = post.get('replies');
+
+    if (!Ember.isEmpty(replies)) {
+      result.push(h('section.embedded-posts.bottom', replies.map(model => {
+        return this.attach('embedded-post', transformPost(this.currentUser, this.site, model), { model });
+      })));
     }
 
     return result;

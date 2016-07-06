@@ -361,7 +361,7 @@ export default RestModel.extend({
     // If we're at the end of the stream, add the post
     if (this.get('loadedAllPosts')) {
       this.appendPost(post);
-      this.get('stream').addObject(post.get('id'));
+      this.addObjectToStream(post);
       return "staged";
     }
 
@@ -373,7 +373,7 @@ export default RestModel.extend({
     if (this.get('topic.id') === post.get('topic_id')) {
       if (this.get('loadedAllPosts')) {
         this.appendPost(post);
-        this.get('stream').addObject(post.get('id'));
+        this.addObjectToStream(post);
       }
     }
 
@@ -414,7 +414,23 @@ export default RestModel.extend({
 
   appendPost(post) {
     const stored = this.storePost(post);
+
     if (stored) {
+      // Handles replies
+      if (stored.reply_to_post_number) {
+        const parent = _(this._identityMap).values().find({
+          post_number: stored.reply_to_post_number
+        });
+
+        if (parent.get('id')) {
+          const replyIndex = _.findIndex(parent.replies, stored);
+
+          parent.replies[replyIndex === -1 ? parent.replies.length : replyIndex] = stored;
+        }
+
+        return;
+      }
+
       const posts = this.get('posts');
 
       if (!posts.contains(stored)) {
@@ -474,7 +490,7 @@ export default RestModel.extend({
     const loadedAllPosts = this.get('loadedAllPosts');
 
     if (this.get('stream').indexOf(postId) === -1) {
-      this.get('stream').addObject(postId);
+      this.addObjectToStream(postId);
       if (loadedAllPosts) {
         this.set('loadingLastPost', true);
         return this.findPostsByIds([postId]).then(posts => {
@@ -558,6 +574,15 @@ export default RestModel.extend({
       return Discourse.ajax(url).then(p => this.storePost(store.createRecord('post', p)));
     }
     return resolved;
+  },
+
+  addObjectToStream(post) {
+    post = typeof post === 'object' ? post : this._identityMap[post];
+
+    // Adds object to stream only if it's not reply to another post
+    if (Ember.get(post, 'reply_to_post_number') == null) {
+      this.get('stream').addObject(Ember.get(post, 'id'));
+    }
   },
 
   /**
@@ -690,6 +715,18 @@ export default RestModel.extend({
 
     const postId = Ember.get(post, 'id');
     if (postId) {
+      // Stores post's replies
+      if (!Ember.isEmpty(post.replies)) {
+        if (post.replies[0].__type !== 'post') {
+          post.replies = post.replies
+            .map(reply => (Object.assign({}, reply, {
+              read: true,
+              reply_to_user: null,
+            })))
+            .map(reply => this.storePost(this.store.createRecord('post', reply)));
+        }
+      }
+
       const existing = this._identityMap[post.get('id')];
 
       // Update the `highest_post_number` if this post is higher.

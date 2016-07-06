@@ -21,7 +21,7 @@ export default {
             api.decorateWidget('post-avatar:after', helper => {
                 const { attrs } = helper;
 
-                if (attrs.has_rating) {
+                if (attrs.has_rating && attrs.reply_to_post_number == null) {
                     return helper.attach('rating-box', attrs);
                 }
             });

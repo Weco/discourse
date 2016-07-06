@@ -29,7 +29,7 @@ class Post < ActiveRecord::Base
   belongs_to :reply_to_user, class_name: "User"
 
   has_many :post_replies
-  has_many :replies, through: :post_replies
+  has_many :replies, -> { order(:sort_order) }, through: :post_replies
   has_many :post_actions
   has_many :topic_links
   has_many :group_mentions, dependent: :destroy
@@ -73,6 +73,7 @@ class Post < ActiveRecord::Base
   }
   scope :mailing_list_new_topics, ->(user, since) { for_mailing_list(user, since).where('topics.created_at > ?', since) }
   scope :mailing_list_updates,    ->(user, since) { for_mailing_list(user, since).where('topics.created_at <= ?', since) }
+  scope :with_replies, -> { where('posts.reply_to_post_number is NULL').includes(:replies) }
 
   delegate :username, to: :user
 

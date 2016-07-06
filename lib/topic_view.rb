@@ -325,11 +325,11 @@ class TopicView
     @filtered_post_stream ||= @filtered_posts.order(:sort_order)
                                              .pluck(:id,
                                                     :post_number,
-                                                    'EXTRACT(DAYS FROM CURRENT_TIMESTAMP - created_at)::INT AS days_ago')
+                                                    'EXTRACT(DAYS FROM CURRENT_TIMESTAMP - posts.created_at)::INT AS days_ago')
   end
 
   def filtered_post_ids
-    @filtered_post_ids ||= filtered_post_stream.map {|tuple| tuple[0]}
+    @filtered_post_ids ||= filtered_post_stream.map {|tuple| tuple[0]}.uniq
   end
 
   protected
@@ -356,9 +356,9 @@ class TopicView
     visible_types = Topic.visible_post_types(@user)
 
     if @user.present?
-      posts.where("posts.user_id = ? OR post_type IN (?)", @user.id, visible_types)
+      posts.with_replies.where("posts.user_id = ? OR posts.post_type IN (?)", @user.id, visible_types)
     else
-      posts.where(post_type: visible_types)
+      posts.with_replies.where(post_type: visible_types)
     end
   end
 
@@ -366,7 +366,7 @@ class TopicView
     # TODO: Sort might be off
     @posts = Post.where(id: post_ids, topic_id: @topic.id)
                  .includes(:user, :reply_to_user, :incoming_email)
-                 .order('sort_order')
+                 .order('posts.sort_order')
     @posts = filter_post_types(@posts)
     @posts = @posts.with_deleted if @guardian.can_see_deleted_posts?
     @posts
@@ -418,7 +418,7 @@ class TopicView
     # Username filters
     if @username_filters.present?
       usernames = @username_filters.map{|u| u.downcase}
-      @filtered_posts = @filtered_posts.where('post_number = 1 OR posts.user_id IN (SELECT u.id FROM users u WHERE username_lower IN (?))', usernames)
+      @filtered_posts = @filtered_posts.where('posts.post_number = 1 OR posts.user_id IN (SELECT u.id FROM users u WHERE username_lower IN (?))', usernames)
       @contains_gaps = true
     end
 
@@ -427,7 +427,7 @@ class TopicView
     # copy the filter for has_deleted? method
     @predelete_filtered_posts = @filtered_posts.spawn
     if @guardian.can_see_deleted_posts? && !@show_deleted && has_deleted?
-      @filtered_posts = @filtered_posts.where("deleted_at IS NULL OR post_number = 1")
+      @filtered_posts = @filtered_posts.where("posts.deleted_at IS NULL OR posts.post_number = 1")
       @contains_gaps = true
     end
 
@@ -471,11 +471,11 @@ class TopicView
 
   def closest_post_to(post_number)
     # happy path
-    closest_post = @filtered_posts.where("post_number = ?", post_number).limit(1).pluck(:id)
+    closest_post = @filtered_posts.where("posts.post_number = ?", post_number).limit(1).pluck(:id)
 
     if closest_post.empty?
       # less happy path, missing post
-      closest_post = @filtered_posts.order("@(post_number - #{post_number})").limit(1).pluck(:id)
+      closest_post = @filtered_posts.order("@(posts.post_number - #{post_number})").limit(1).pluck(:id)
     end
 
     return nil if closest_post.empty?

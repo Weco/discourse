@@ -271,11 +271,6 @@ export default createWidget('post-menu', {
 
     const postControls = [];
 
-    const repliesButton = this.attachButton('replies', attrs);
-    if (repliesButton) {
-      postControls.push(repliesButton);
-    }
-
     postControls.push(h('div.actions', visibleButtons));
     if (state.adminVisible) {
       postControls.push(this.attach('post-admin-menu', attrs));

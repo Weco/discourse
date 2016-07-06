@@ -620,7 +620,6 @@ const Composer = RestModel.extend({
       // If it's in reply to another post, increase the reply count
       if (post) {
         post.set('reply_count', (post.get('reply_count') || 0) + 1);
-        post.set('replies', []);
       }
 
       // We do not stage posts in mobile view, we do not have the "cooked"

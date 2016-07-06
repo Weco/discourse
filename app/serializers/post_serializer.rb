@@ -20,6 +20,7 @@ class PostSerializer < BasicPostSerializer
              :post_type,
              :updated_at,
              :reply_count,
+             :replies,
              :reply_to_post_number,
              :quote_count,
              :avg_time,
@@ -186,6 +187,14 @@ class PostSerializer < BasicPostSerializer
       username: object.reply_to_user.username,
       avatar_template: object.reply_to_user.avatar_template
     }
+  end
+
+  def replies
+    replies = []
+    object.replies.each do |reply|
+      replies << PostSerializer.new(reply, @options).as_json
+    end
+    replies
   end
 
   def bookmarked

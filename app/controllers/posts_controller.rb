@@ -622,12 +622,12 @@ class PostsController < ApplicationController
   end
 
   def find_post_from_params
-    by_id_finder = Post.where(id: params[:id] || params[:post_id])
+    by_id_finder = Post.includes(:replies).where(id: params[:id] || params[:post_id])
     find_post_using(by_id_finder)
   end
 
   def find_post_from_params_by_number
-    by_number_finder = Post.where(topic_id: params[:topic_id], post_number: params[:post_number])
+    by_number_finder = Post.includes(:replies).where(topic_id: params[:topic_id], post_number: params[:post_number])
     find_post_using(by_number_finder)
   end
 
