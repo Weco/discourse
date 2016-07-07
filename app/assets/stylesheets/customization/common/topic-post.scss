@@ -13,19 +13,6 @@
   }
 }
 
-.topic-avatar {
-  border-top: none;
-  padding-top: 0;
-  margin-right: 8px;
-  width: 30px;
-
-  img.avatar {
-    width: 30px;
-    height: 30px;
-    border-radius: 0;
-  }
-}
-
 .post-meta {
 	overflow: hidden;
 	padding-bottom: 8px;
@@ -44,6 +31,19 @@
 }
 
 .post-author {
+  .topic-avatar {
+    border-top: none;
+    padding-top: 0;
+    margin-right: 8px;
+    width: 30px;
+
+    img.avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 0;
+    }
+  }
+
   .names {
     margin-top: 4px;
   }
