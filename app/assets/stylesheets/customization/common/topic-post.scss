@@ -1,6 +1,55 @@
+.topic-meta-data {
+  float: right;
+  margin: 0;
+  padding: 8px;
+  background: blend-primary-secondary(5%);
+
+  #post_1 & {
+    background: blend-primary-secondary(5%);
+  }
+
+  .post-info {
+    float: left;
+  }
+}
+
+.topic-avatar {
+  border-top: none;
+  padding-top: 0;
+  margin-right: 8px;
+  width: 30px;
+
+  img.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 0;
+  }
+}
+
+.post-meta {
+	overflow: hidden;
+	padding-bottom: 8px;
+	position: relative;
+
+  > div {
+    margin-right: 8px;
+    margin-left: 0;
+  }
+
+  .read-state {
+    position: static;
+    top: 0;
+    float: left;
+  }
+}
+
+.post-author {
+  .names {
+    margin-top: 4px;
+  }
+}
+
 .embedded-posts {
-  border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
-  margin-right: -10px;
   clear: both;
 
   .reply {
@@ -13,11 +62,15 @@
       background: none;
 
       > div {
-        margin-left: 8px;
+        margin: 0 0 0 8px;
       }
 
       .names span {
         padding: 0;
+      }
+
+      .reply-to-tab {
+        display: none;
       }
     }
 
@@ -36,11 +89,11 @@
       padding: 8px 8px 0 8px;
       width: 100%;
       overflow: visible;
+      box-sizing: border-box;
 
       .cooked {
         margin-top: 8px;
         font-size: 12px;
-        margin-right: 82px;
 
         p {
           margin: 8px 0;
@@ -72,6 +125,10 @@
         display: none;
       }
     }
+  }
+
+  .time-gap + .topic-post & .topic-body {
+    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
   }
 }
 

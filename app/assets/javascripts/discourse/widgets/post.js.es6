@@ -413,6 +413,8 @@ export default createWidget('post', {
     if (attrs.primary_group_name) { classNames.push(`group-${attrs.primary_group_name}`); }
     if (attrs.wiki) { classNames.push(`wiki`); }
     if (attrs.isWhisper) { classNames.push('whisper'); }
+    if (attrs.has_rating) { classNames.push('rating'); }
+    if (attrs.replyCount === 0) { classNames.push('no-replies'); }
     if (attrs.isModeratorAction || (attrs.isWarning && attrs.firstPost)) {
       classNames.push('moderator');
     } else {
