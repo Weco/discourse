@@ -11,22 +11,23 @@
   .post-info {
     float: left;
   }
-}
 
-.post-meta {
-	overflow: hidden;
-	padding-bottom: 8px;
-	position: relative;
+  .post-meta {
+  	overflow: hidden;
+  	padding-bottom: 8px;
+  	position: relative;
 
-  > div {
-    margin-right: 8px;
-    margin-left: 0;
-  }
+    > div {
+      margin-right: 8px;
+      margin-left: 0;
+      float: left;
+    }
 
-  .read-state {
-    position: static;
-    top: 0;
-    float: left;
+    .read-state {
+      position: static;
+      top: 0;
+      float: left;
+    }
   }
 }
 
