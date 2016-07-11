@@ -1,7 +1,12 @@
 import ButtonView from 'discourse/views/button';
 
 export default ButtonView.extend({
-  textKey: 'topic.reply.title',
+  text: function() {
+    const tags = this.get('controller').model.tags;
+    const isProblem = tags.indexOf('problem') !== -1;
+
+    return I18n.t(`topic.${isProblem ? 'add_solution' : 'reply'}.title`);
+  }.property(),
   classNames: ['btn', 'btn-primary', 'create'],
   click: function() {
     this.get('controller').send('showLogin');

@@ -1,0 +1,66 @@
+html {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+// Buttons
+.btn,
+.widget-button {
+    font-weight: 500;
+    border-radius: 3px;
+    border: 1px solid #bbcadc;
+    background-color: #f1f8fb;
+    color: #2b6dad;
+    transition: border-color .3s, background-color .3s, color .3s;
+
+    &:hover {
+        background-color: #f1f8fb;
+        border-color: #2865a1;
+        color: #2865a1;
+    }
+
+    &.btn-danger {
+        background-color: #e45735;
+        border-color: #c63c1b;
+        color: #fff;
+
+        &:hover {
+            background-color: #c63c1b;
+            border-color: #c63c1b;
+            color: #fff;
+        }
+    }
+
+    &.btn-primary {
+        background-color: #3e78ad;
+        border-color: #3a66ad;
+        color: #fff;
+
+        &:hover {
+            background-color: #3a66ad;
+            border-color: #3a66ad;
+            color: #fff;
+        }
+    }
+}
+
+.d-editor-button-bar .btn {
+    border: 0;
+
+    &:hover {
+        background: #b2b2b2;
+        border: 0;
+    }
+}
+
+#login-link,
+#new-account-link {
+    &.btn-large {
+        padding-left: 18px;
+        background-color: #f1f8fb;
+        color: #2b6dad;
+
+        &:hover {
+            color: #2865a1;
+        }
+    }
+}

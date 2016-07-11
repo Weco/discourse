@@ -114,9 +114,9 @@ registerButton('replies', (attrs, state, siteSettings) => {
 registerButton('share', attrs => {
   return {
     action: 'share',
-    className: 'share',
+    className: 'share text',
     title: 'post.controls.share',
-    icon: 'link',
+    label: 'topic.share.title',
     data: {
       'share-url': attrs.shareUrl,
       'post-number': attrs.post_number
@@ -124,12 +124,25 @@ registerButton('share', attrs => {
   };
 });
 
+registerButton('comments', (attrs, state, siteSettings) => {
+  const replyCount = attrs.replyCount;
+
+  if (attrs.post_number === 1) { return; }
+
+  return {
+    action: replyCount ? 'toggleComments' : 'replyToPost',
+    className: 'comments text',
+    label: `post.comments.${replyCount ? 'other' : 'one'}`,
+    counter: replyCount
+  };
+});
+
+
 registerButton('reply', attrs => {
   const args = {
     action: 'replyToPost',
     title: 'post.controls.reply',
-    icon: 'reply',
-    className: 'reply create fade-out'
+    className: 'reply create btn'
   };
 
   if (!attrs.canCreatePost) { return; }
@@ -270,6 +283,14 @@ export default createWidget('post-menu', {
     });
 
     const postControls = [];
+
+    if (attrs.has_rating && attrs.reply_to_post_number == null) {
+      visibleButtons.splice(attrs.canCreatePost ? 1 : 0, 0, this.attach('rating-box', attrs));
+    }
+
+    if (attrs.post_number !== 1) {
+      visibleButtons = visibleButtons.filter(btn => btn.attrs.title !== 'post.controls.reply');
+    }
 
     postControls.push(h('div.actions', visibleButtons));
     if (state.adminVisible) {

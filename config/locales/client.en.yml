@@ -1385,10 +1385,10 @@ en:
         help: 'begin composing a reply to this topic'
 
       add_solution:
-        title: 'Add solution'
+        title: 'Solve'
 
       add_comment:
-        title: 'Add comment'
+        title: 'Comment'
 
       clear_pin:
         title: "Clear pin"
@@ -1539,6 +1539,9 @@ en:
       more_links: "{{count}} more..."
 
       unread: "Post is unread"
+      comments:
+        one: "Comment"
+        other: "Comments" #"Comments <span class='counter'>{{count}}</span>"
       has_replies:
         one: "{{count}} Reply"
         other: "{{count}} Replies"

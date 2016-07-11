@@ -1,0 +1,14 @@
+.discourse-tag.box {
+    padding: 4px 8px;
+    font-size: 1.1em;
+    font-weight: 500;
+    line-height: 1.2em;
+    border-radius: 12px;
+    background: #f4f4fa;
+    color: #808393;
+    transition: background-color .3s;
+
+    &:hover {
+        background: #ededf7;
+    }
+}

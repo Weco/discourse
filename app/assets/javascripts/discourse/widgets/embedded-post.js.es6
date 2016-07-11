@@ -27,17 +27,22 @@ export default createWidget('embedded-post', {
   buildKey: attrs => `embedded-post-${attrs.id}`,
 
   html(attrs, state) {
+    const menu = [this.attach('post-menu', attrs, {
+      state: { collapsed: false }
+    })];
+
+    if (attrs.created_at) {
+      menu.push(this.attach('post-date', attrs));
+    }
+
     return [
       h('div.reply', {attributes: {'data-post-id': attrs.id}}, [
         h('div.row', [
           h('div.topic-body', [
+            this.attach('post-avatar', attrs),
+            this.attach('poster-name', attrs),
             new PostCooked(attrs, new DecoratorHelper(this)),
-            this.attach('post-meta-data', attrs, {
-              state: { isReply:  true }
-            }),
-            this.attach('post-menu', attrs, {
-              state: { collapsed: false }
-            })
+            menu
           ])
         ])
       ])

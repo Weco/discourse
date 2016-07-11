@@ -108,7 +108,7 @@ basic:
   post_menu:
     client: true
     type: list
-    default: 'like-count|like|share|flag|edit|bookmark|delete|admin|reply'
+    default: 'reply|comments|share|flag|bookmark|edit|delete|admin'
     choices:
      - like-count
      - like
@@ -346,7 +346,7 @@ users:
     default: false
   prioritize_username_in_ux:
     client: true
-    default: true
+    default: false
   email_token_valid_hours:
     default: 24
     min: 1
@@ -467,7 +467,7 @@ posting:
   post_excerpt_maxlength: 300
   display_name_on_posts:
     client: true
-    default: false
+    default: true
   show_time_gap_days:
     default: 7
     client: true

@@ -11,7 +11,7 @@ export function dateNode(dt) {
       'data-format': 'tiny'
     };
 
-    return h('span.relative-date', { attributes }, relativeAge(dt));
+    return h('span', { attributes }, longDate(dt));
   }
 }
 

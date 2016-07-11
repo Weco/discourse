@@ -144,6 +144,23 @@ function showReplyTab(attrs, siteSettings) {
          (!attrs.replyDirectlyAbove || !siteSettings.suppress_reply_directly_above);
 }
 
+createWidget('post-date', {
+  tagName: 'div.post-info',
+  html(attrs) {
+    const createdAt = new Date(attrs.created_at);
+
+    if (createdAt) {
+      return h('a.post-date', {
+        attributes: {
+          href: attrs.shareUrl,
+          'data-share-url': attrs.shareUrl,
+          'data-post-number': attrs.post_number
+        }
+      }, [attrs.prefix, dateNode(createdAt)]);
+    }
+  }
+})
+
 createWidget('post-meta-data', {
   tagName: 'div.topic-meta-data',
   html(attrs, state) {
@@ -155,17 +172,8 @@ createWidget('post-meta-data', {
       }, iconNode('eye-slash')));
     }
 
-    const createdAt = new Date(attrs.created_at);
-    if (createdAt) {
-      result.push(h('div.post-info',
-        h('a.post-date', {
-          attributes: {
-            href: attrs.shareUrl,
-            'data-share-url': attrs.shareUrl,
-            'data-post-number': attrs.post_number
-          }
-        }, dateNode(createdAt))
-      ));
+    if (attrs.created_at) {
+      result.push(this.attach('post-date', Object.assign({ prefix: 'Created ' }, attrs)));
     }
 
     if (attrs.via_email) {
@@ -184,10 +192,6 @@ createWidget('post-meta-data', {
       result.push(this.attach('select-post', attrs));
     }
 
-    if (showReplyTab(attrs, this.siteSettings)) {
-      result.push(this.attach('reply-to-tab', attrs));
-    }
-
     result.push(h('div.read-state', {
       className: attrs.read ? 'read' : null,
       attributes: {
@@ -195,14 +199,7 @@ createWidget('post-meta-data', {
       }
     }, iconNode('circle')));
 
-    if (state.isReply) {
-      return [this.attach('poster-name', attrs)].concat(result);
-    } else {
-      return [
-        h('div.post-meta', result),
-        h('div.post-author', [this.attach('post-avatar', attrs), this.attach('poster-name', attrs)])
-      ];
-    }
+    return result;
   }
 });
 
@@ -296,10 +293,16 @@ createWidget('post-contents', {
 });
 
 createWidget('post-body', {
+  buildKey: attrs => `post-body-${attrs.id}`,
   tagName: 'div.topic-body.clearfix',
 
-  html(attrs) {
+  defaultState() {
+    return { showComments: false };
+  },
+
+  html(attrs, state) {
     const result = [
+      h('div.post-author', [this.attach('post-avatar', attrs), this.attach('poster-name', attrs)]),
       this.attach('post-contents', attrs),
       this.attach('post-meta-data', attrs),
       this.attach('post-menu', attrs)
@@ -307,19 +310,29 @@ createWidget('post-body', {
     const post = this.findAncestorModel();
     const replies = post.get('replies');
 
-    if (!Ember.isEmpty(replies)) {
-      result.push(h('section.embedded-posts.bottom', replies.map(model => {
-        return this.attach('embedded-post', transformPost(this.currentUser, this.site, model), { model });
-      })));
+    if (!Ember.isEmpty(replies) && state.showComments) {
+      result.push(h('section.embedded-posts.bottom.clearfix',
+        replies
+          .map(model => {
+            return this.attach('embedded-post', transformPost(this.currentUser, this.site, model), { model });
+          })
+          .concat(attrs.canCreatePost ? this.attach('button', {
+            action: 'replyToPost',
+            title: 'post.comments.one',
+            className: 'reply create btn btn-primary btn-small',
+            label: 'post.comments.one'
+          }) : [])
+      ));
     }
 
     result.push(this.attach('actions-summary', attrs));
     result.push(this.attach('post-links', attrs));
-    if (attrs.showTopicMap) {
-      result.push(this.attach('topic-map', attrs));
-    }
 
     return result;
+  },
+
+  toggleComments() {
+    return this.state.showComments = !this.state.showComments;
   }
 });
 

@@ -22,7 +22,7 @@ export default createWidget('post-edits-indicator', {
   },
 
   html(attrs) {
-    const contents = [attrs.version - 1, ' ', iconNode('pencil')];
+    const contents = [attrs.version - 1, ' ', `Edit${attrs.version > 2 ? 's' : ''}`];
     const updatedAt = new Date(attrs.updated_at);
 
     const title = `${I18n.t('post.last_edited_on')} ${longDate(updatedAt)}`;

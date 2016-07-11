@@ -3,10 +3,18 @@ import { h } from 'virtual-dom';
 import showModal from 'discourse/lib/show-modal';
 
 export default createWidget('rating-button', {
-    tagName: 'div.rating_box__button',
+    tagName: 'button.widget-button.rating',
 
     buildClasses(attrs) {
-        return `rating_box__button--${attrs.type}`;
+        return attrs.type === 'up' ? 'btn' : 'text';
+    },
+
+    html(attrs) {
+        if (attrs.type === 'up') {
+            return ['Upvote', h('span.divider'), attrs.rating.toString()];
+        } else {
+            return 'Downvote';
+        }
     },
 
     click() {

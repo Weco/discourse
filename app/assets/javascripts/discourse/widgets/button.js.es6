@@ -1,3 +1,4 @@
+import { h } from 'virtual-dom';
 import { createWidget } from 'discourse/widgets/widget';
 import { iconNode } from 'discourse/helpers/fa-icon';
 
@@ -5,10 +6,14 @@ export default createWidget('button', {
   tagName: 'button.widget-button',
 
   buildClasses(attrs) {
-    const className = this.attrs.className || '';
+    let className = this.attrs.className || '';
 
     if (!attrs.label && !attrs.contents) {
-      return className + ' no-text';
+      className += ' no-text';
+    }
+
+    if (attrs.counter) {
+      className += ' counter';
     }
 
     return className;
@@ -37,8 +42,14 @@ export default createWidget('button', {
   html(attrs) {
     const contents = [];
     const left = !attrs.iconRight;
+    const label = attrs.label && I18n.t(attrs.label, attrs.labelOptions);
     if (attrs.icon && left) { contents.push(iconNode(attrs.icon, { class: attrs.iconClass })); }
-    if (attrs.label) { contents.push(I18n.t(attrs.label, attrs.labelOptions)); }
+    if (attrs.counter) {
+      label && contents.push(h('span.text', label));
+      contents.push(h('span.counter', attrs.counter.toString()));
+    } else {
+      label && contents.push(label);
+    }
     if (attrs.contents) { contents.push(attrs.contents); }
     if (attrs.icon && !left) { contents.push(iconNode(attrs.icon, { class: attrs.iconClass })); }
 
