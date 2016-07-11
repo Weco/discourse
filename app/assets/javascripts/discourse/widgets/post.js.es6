@@ -328,6 +328,14 @@ createWidget('post-body', {
     result.push(this.attach('actions-summary', attrs));
     result.push(this.attach('post-links', attrs));
 
+    if (attrs.post_number === 1 && attrs.has_rating) {
+      const solutionsCount = post.get('topic.posts_count') - post.get('topic.reply_count') - 1;
+
+      if (solutionsCount && solutionsCount > 0) {
+        result.push(h('div.solutions-count', `${solutionsCount} Solution${solutionsCount === 1 ? '' : 's'}`));
+      }
+    }
+
     return result;
   },
 

@@ -41,6 +41,43 @@ html {
             color: #fff;
         }
     }
+
+    &.btn-social {
+        &,
+        &:hover {
+            color: #fff;
+            border: 0;
+        }
+
+        &.google,
+        &.google_oauth2 {
+            background: $google;
+        }
+
+        &.instagram {
+            background: $instagram;
+        }
+
+        &.facebook {
+            background: $facebook;
+        }
+
+        &.cas {
+            background: $cas;
+        }
+
+        &.twitter {
+            background: $twitter;
+        }
+
+        &.yahoo {
+            background: $yahoo;
+        }
+
+        &.github {
+            background: $github;
+        }
+    }
 }
 
 .d-editor-button-bar .btn {
