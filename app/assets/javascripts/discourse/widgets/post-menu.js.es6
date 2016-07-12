@@ -80,8 +80,7 @@ registerButton('edit', attrs => {
       action: 'editPost',
       className: 'edit',
       title: 'post.controls.edit',
-      icon: 'pencil',
-      alwaysShowYours: true
+      icon: 'pencil'
     };
   }
 });
@@ -114,9 +113,10 @@ registerButton('replies', (attrs, state, siteSettings) => {
 registerButton('share', attrs => {
   return {
     action: 'share',
-    className: 'share text',
+    className: `share${attrs.mobileView ? '' : ' text'}`,
     title: 'post.controls.share',
-    label: 'topic.share.title',
+    label: !attrs.mobileView && 'topic.share.title',
+    icon: attrs.mobileView && 'link',
     data: {
       'share-url': attrs.shareUrl,
       'post-number': attrs.post_number
@@ -149,6 +149,8 @@ registerButton('reply', attrs => {
 
   if (!attrs.mobileView) {
     args.label = `topic.${attrs.has_rating ? (attrs.post_number == 1 ? 'add_solution' : 'add_comment') : 'reply'}.title`;
+  } else {
+    args.icon = 'reply';
   }
 
   return args;
@@ -193,6 +195,31 @@ registerButton('delete', attrs => {
   }
 });
 
+createWidget('post-buttons-dropdown', {
+  tagName: 'div.post-buttons-dropdown',
+
+  html(attrs) {
+    return attrs.buttons.map(button => {
+      const originalClick = button.click;
+
+      button.click = function() {
+        this.sendWidgetAction('hideMoreActions');
+        originalClick.apply(this, arguments);
+      };
+
+      return button;
+    });
+  },
+
+  click() {
+    this.sendWidgetAction('hideMoreActions');
+  },
+
+  clickOutside() {
+    this.sendWidgetAction('hideMoreActions');
+  }
+});
+
 export default createWidget('post-menu', {
   tagName: 'section.post-menu-area.clearfix',
 
@@ -220,8 +247,14 @@ export default createWidget('post-menu', {
       return !attrs.bookmarked || s !== 'bookmark';
     });
 
+    if (attrs.mobileView) {
+      hiddenButtons.splice(0, 0, 'share');
+    }
+
     const allButtons = [];
     let visibleButtons = [];
+    let secondaryButtons = [];
+
     siteSettings.post_menu.split('|').forEach(i => {
       const button = this.attachButton(i, attrs);
       if (button) {
@@ -234,16 +267,20 @@ export default createWidget('post-menu', {
 
     // Only show ellipsis if there is more than one button hidden
     // if there are no more buttons, we are not collapsed
-    if (!state.collapsed || (allButtons.length <= visibleButtons.length + 1)) {
-      visibleButtons = allButtons;
+    const isSecondaryVisible = !state.collapsed || (allButtons.length <= visibleButtons.length + 1);
+    if (isSecondaryVisible) {
+      secondaryButtons = allButtons.filter(i => visibleButtons.indexOf(i) === -1);
       if (state.collapsed) { state.collapsed = false; }
-    } else {
+    }
+
+    if (!isSecondaryVisible || !attrs.mobileView) {
       const showMore = this.attach('button', {
         action: 'showMoreActions',
         title: 'show_more',
-        className: 'show-more-actions',
-        icon: 'ellipsis-h' });
-      visibleButtons.splice(visibleButtons.length - 1, 0, showMore);
+        className: `show-more-actions${isSecondaryVisible ? ' active' : ''}`,
+        icon: 'ellipsis-h'
+      });
+      visibleButtons.splice(visibleButtons.length, 0, showMore);
     }
 
     Object.keys(_extraButtons).forEach(k => {
@@ -292,7 +329,18 @@ export default createWidget('post-menu', {
       visibleButtons = visibleButtons.filter(btn => btn.attrs.title !== 'post.controls.reply');
     }
 
-    postControls.push(h('div.actions', visibleButtons));
+    const actions = [visibleButtons];
+
+    if (secondaryButtons.length) {
+      if (attrs.mobileView) {
+        actions.push(h('div.secondary-actions', secondaryButtons));
+      } else {
+        postControls.push(this.attach('post-buttons-dropdown', { buttons: secondaryButtons }));
+      }
+    }
+
+    postControls.push(h('div.actions', actions));
+
     if (state.adminVisible) {
       postControls.push(this.attach('post-admin-menu', attrs));
     }
@@ -316,6 +364,10 @@ export default createWidget('post-menu', {
 
   closeAdminMenu() {
     this.state.adminVisible = false;
+  },
+
+  hideMoreActions() {
+    this.state.collapsed = true;
   },
 
   showMoreActions() {

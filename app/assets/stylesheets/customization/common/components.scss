@@ -81,6 +81,7 @@ html {
 }
 
 .d-editor-button-bar .btn {
+    color: #919191;
     border: 0;
 
     &:hover {
@@ -100,4 +101,8 @@ html {
             color: #2865a1;
         }
     }
+}
+
+.topic-list button.bulk-select {
+    border: 0;
 }

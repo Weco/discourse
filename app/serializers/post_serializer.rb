@@ -43,6 +43,7 @@ class PostSerializer < BasicPostSerializer
              :link_counts,
              :read,
              :user_title,
+             :user_profession,
              :reply_to_user,
              :bookmarked,
              :raw,
@@ -176,6 +177,10 @@ class PostSerializer < BasicPostSerializer
 
   def user_title
     object.try(:user).try(:title)
+  end
+
+  def user_profession
+    object.try(:user).try(:user_fields)['1']
   end
 
   def trust_level

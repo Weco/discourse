@@ -1,0 +1,25 @@
+.topic-meta-data {
+    margin-left: 0;
+    float: left;
+	margin-bottom: 10px;
+}
+
+nav.post-controls button {
+	font-size: 1.143em;
+	padding: 8px 10px;
+	vertical-align: top;
+	background: transparent;
+	border: none;
+	margin-left: 3px;
+}
+
+.secondary-actions {
+	overflow: hidden;
+	width: 100%;
+	padding-top: 5px;
+
+	.embedded-posts & {
+		width: auto;
+		padding: 0;
+	}
+}

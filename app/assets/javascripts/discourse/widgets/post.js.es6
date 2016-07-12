@@ -320,7 +320,8 @@ createWidget('post-body', {
             action: 'replyToPost',
             title: 'post.comments.one',
             className: 'reply create btn btn-primary btn-small',
-            label: 'post.comments.one'
+            label: !attrs.mobileView && 'post.comments.one',
+            icon: attrs.mobileView && 'reply'
           }) : [])
       ));
     }
