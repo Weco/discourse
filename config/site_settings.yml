@@ -23,9 +23,9 @@
 required:
   title:
     client: true
-    default: 'Discourse'
+    default: 'Open Companies'
   site_description:
-    default: ''
+    default: 'Open Companies'
   contact_email:
     client: true
     default: ''
@@ -34,7 +34,7 @@ required:
     client: true
     default: ''
   notification_email:
-    default: 'noreply@unconfigured.discourse.org'
+    default: 'noreply@open.xyz'
     type: email
     shadowed_by_global: true
   site_contact_username:
@@ -42,19 +42,19 @@ required:
     type: username
   logo_url:
     client: true
-    default: '/images/d-logo-sketch.png'
+    default: '/images/logo@2x.png'
   logo_small_url:
     client: true
-    default: '/images/d-logo-sketch-small.png'
+    default: '/images/logo-single@2x.png'
   digest_logo_url:
     default: ''
   mobile_logo_url:
     client: true
-    default: ''
+    default: '/images/logo-single@2x.png'
   favicon_url:
     client: true
-    default: '/images/default-favicon.ico'
-  apple_touch_icon_url: '/images/default-apple-touch-icon.png'
+    default: '/images/favicon.ico'
+  apple_touch_icon_url: '/images/apple-touch-icon.png'
   exclude_rel_nofollow_domains:
     default: ''
     type: list
@@ -76,7 +76,7 @@ basic:
     default: 5
     min: 0
   limit_suggested_to_category:
-    default: false
+    default: true
   suggested_topics_max_days_old:
     default: 365
     min: 7
@@ -101,7 +101,7 @@ basic:
     client: true
     refresh: true
     type: list
-    default: "latest|new|unread|top|categories"
+    default: "categories|latest|new|unread|top"
     regex: "latest"
     regex_error: "site_settings.errors.must_include_latest"
     choices:
@@ -116,7 +116,7 @@ basic:
   post_menu:
     client: true
     type: list
-    default: 'like-count|like|share|flag|edit|bookmark|delete|admin|reply'
+    default: 'reply|comments|share|flag|bookmark|edit|delete|admin'
     choices:
      - like-count
      - like
@@ -191,7 +191,7 @@ basic:
     min: 1
   fixed_category_positions:
     client: true
-    default: false
+    default: true
 
   fixed_category_positions_on_create:
     client: true
@@ -314,11 +314,11 @@ users:
     default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support"
   min_password_length:
     client: true
-    default: 10
+    default: 8
     min: 1
   min_admin_password_length:
     client: true
-    default: 15
+    default: 12
     min: 1
   block_common_passwords: true
   enforce_global_nicknames:
@@ -355,7 +355,7 @@ users:
     default: false
   prioritize_username_in_ux:
     client: true
-    default: true
+    default: false
   email_token_valid_hours:
     default: 24
     min: 1
@@ -366,7 +366,7 @@ users:
     default: ''
   staff_user_custom_fields:
     type: list
-    default: ''
+    default: 'reputation'
   enable_user_directory:
     client: true
     default: true
@@ -422,7 +422,7 @@ posting:
     min: 1
   allow_uncategorized_topics:
     client: true
-    default: true
+    default: false
     refresh: true
   allow_duplicate_topic_titles: false
   min_title_similar_length:
@@ -482,7 +482,7 @@ posting:
     default: true
   display_name_on_posts:
     client: true
-    default: false
+    default: true
   show_time_gap_days:
     default: 7
     client: true
@@ -495,7 +495,7 @@ posting:
   warn_reviving_old_topic_age: 180
   autohighlight_all_code:
     client: true
-    default: false
+    default: true
   highlighted_languages:
     default: 'apache|bash|cs|cpp|css|coffeescript|diff|xml|http|ini|json|java|javascript|makefile|markdown|nginx|objectivec|ruby|perl|php|python|sql|handlebars'
     choices: 'HighlightJs.languages'
@@ -964,7 +964,7 @@ legal:
 
 backups:
   allow_restore:
-    default: false
+    default: true
   maximum_backups:
     client: true
     default: 5
@@ -1220,12 +1220,12 @@ user_preferences:
 tags:
   tagging_enabled:
     client: true
-    default: false
+    default: true
     refresh: true
   tag_style:
     client: true
     type: enum
-    default: 'simple'
+    default: 'box'
     choices:
      - simple
      - bullet
@@ -1250,7 +1250,7 @@ tags:
     min: 1
   show_filter_by_tag:
     client: true
-    default: false
+    default: true
     refresh: true
   max_tags_in_filter_list:
     default: 30
