@@ -146,12 +146,8 @@
             margin-left: 10px;
             width: calc(100% - 50px);
 
-            span {
-                display: inline-block;
-
-                &.username:before {
-                    content: '@';
-                }
+            .username:before {
+                content: '@';
             }
 
             .full-name {
@@ -218,6 +214,7 @@
             margin: 0;
             font-size: 1em;
             float: left;
+            box-shadow: none;
 
             &:after {
             	content: '·';
