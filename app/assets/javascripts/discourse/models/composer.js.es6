@@ -223,7 +223,7 @@ const Composer = RestModel.extend({
   saveText: function() {
     switch (this.get('action')) {
       case EDIT: return I18n.t('composer.save_edit');
-      case REPLY: return I18n.t('composer.reply');
+      case REPLY: return I18n.t('composer.send');
       case CREATE_TOPIC: return I18n.t('composer.create_topic');
       case PRIVATE_MESSAGE: return I18n.t('composer.create_pm');
     }

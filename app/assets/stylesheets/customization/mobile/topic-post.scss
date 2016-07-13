@@ -23,3 +23,17 @@ nav.post-controls button {
 		padding: 0;
 	}
 }
+
+.post-controls {
+    position: relative;
+
+    .post-admin-menu {
+        top: 69px;
+        left: 0;
+        bottom: auto;
+    }
+
+	.embedded-posts & .post-admin-menu {
+		top: 35px;
+	}
+}

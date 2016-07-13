@@ -314,7 +314,12 @@ createWidget('post-body', {
       result.push(h('section.embedded-posts.bottom.clearfix',
         replies
           .map(model => {
-            return this.attach('embedded-post', transformPost(this.currentUser, this.site, model), { model });
+            const transformed = transformPost(this.currentUser, this.site, model);
+
+            transformed.canCreatePost = attrs.canCreatePost;
+            transformed.mobileView = attrs.mobileView;
+
+            return this.attach('embedded-post', transformed, { model });
           })
           .concat(attrs.canCreatePost ? this.attach('button', {
             action: 'replyToPost',

@@ -243,7 +243,7 @@ export default createWidget('post-menu', {
     const { siteSettings } = this;
 
     const hiddenSetting = (siteSettings.post_menu_hidden_items || '');
-    const hiddenButtons = hiddenSetting.split('|').filter(s => {
+    let hiddenButtons = hiddenSetting.split('|').filter(s => {
       return !attrs.bookmarked || s !== 'bookmark';
     });
 
@@ -255,6 +255,10 @@ export default createWidget('post-menu', {
     let visibleButtons = [];
     let secondaryButtons = [];
 
+    if (attrs.reply_to_post_number) {
+      hiddenButtons = siteSettings.post_menu.split('|').filter(i => ['edit', 'delete', 'admin'].indexOf(i) === -1);
+    }
+
     siteSettings.post_menu.split('|').forEach(i => {
       const button = this.attachButton(i, attrs);
       if (button) {
@@ -265,22 +269,25 @@ export default createWidget('post-menu', {
       }
     });
 
-    // Only show ellipsis if there is more than one button hidden
-    // if there are no more buttons, we are not collapsed
-    const isSecondaryVisible = !state.collapsed || (allButtons.length <= visibleButtons.length + 1);
-    if (isSecondaryVisible) {
-      secondaryButtons = allButtons.filter(i => visibleButtons.indexOf(i) === -1);
-      if (state.collapsed) { state.collapsed = false; }
-    }
+    if (!attrs.reply_to_post_number) {
+      // Only show ellipsis if there is more than one button hidden
+      // if there are no more buttons, we are not collapsed
+      const isSecondaryVisible = !state.collapsed || (allButtons.length <= visibleButtons.length + 1);
 
-    if (!isSecondaryVisible || !attrs.mobileView) {
-      const showMore = this.attach('button', {
-        action: 'showMoreActions',
-        title: 'show_more',
-        className: `show-more-actions${isSecondaryVisible ? ' active' : ''}`,
-        icon: 'ellipsis-h'
-      });
-      visibleButtons.splice(visibleButtons.length, 0, showMore);
+      if (isSecondaryVisible) {
+        secondaryButtons = allButtons.filter(i => visibleButtons.indexOf(i) === -1);
+        if (state.collapsed) { state.collapsed = false; }
+      }
+
+      if (!isSecondaryVisible || !attrs.mobileView) {
+        const showMore = this.attach('button', {
+          action: 'showMoreActions',
+          title: 'show_more',
+          className: `show-more-actions${isSecondaryVisible ? ' active' : ''}`,
+          icon: 'ellipsis-h'
+        });
+        visibleButtons.splice(visibleButtons.length, 0, showMore);
+      }
     }
 
     Object.keys(_extraButtons).forEach(k => {

@@ -12,32 +12,43 @@
         border-top: 0;
     }
 
-    .embedded-posts .topic-body .actions .widget-button {
-        .fa,
-        .read-icon {
+    .embedded-posts {
+        .post-admin-menu {
+            right: auto;
+            left: 0;
+        }
+
+        .post-buttons-dropdown {
             display: none;
         }
 
-        &.edit:before {
-            content: 'Edit';
-        }
-
-        &.delete {
-            &:before {
-                content: 'Delete';
+        .topic-body .actions .widget-button {
+            .fa,
+            .read-icon {
+                display: none;
             }
 
-            &:hover {
-                color: #999;
+            &.edit:before {
+                content: 'Edit';
             }
-        }
 
-        &.recover:before {
-            content: 'Recover';
-        }
+            &.delete {
+                &:before {
+                    content: 'Delete';
+                }
 
-        &.show-post-admin-menu:before {
-            content: 'Admin';
+                &:hover {
+                    color: #999;
+                }
+            }
+
+            &.recover:before {
+                content: 'Recover';
+            }
+
+            &.show-post-admin-menu:before {
+                content: 'Admin';
+            }
         }
     }
 
