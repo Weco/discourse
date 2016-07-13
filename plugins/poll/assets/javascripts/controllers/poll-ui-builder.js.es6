@@ -1,28 +1,34 @@
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import InputValidation from 'discourse/models/input-validation';
 
 export default Ember.Controller.extend({
   needs: ['modal'],
+  numberPollType: 'number',
+  multiplePollType: 'multiple',
 
   init() {
     this._super();
     this._setupPoll();
   },
 
-  @computed
-  pollTypes() {
-    return [I18n.t("poll.ui_builder.poll_type.number"), I18n.t("poll.ui_builder.poll_type.multiple")].map(type => {
-      return { name: type, value: type };
-    });
+  @computed("numberPollType", "multiplePollType")
+  pollTypes(numberPollType, multiplePollType) {
+    let types = [];
+
+    types.push({ name: I18n.t("poll.ui_builder.poll_type.number"), value: numberPollType });
+    types.push({ name: I18n.t("poll.ui_builder.poll_type.multiple"), value: multiplePollType });
+
+    return types;
   },
 
-  @computed("pollType", "pollOptionsCount")
-  isMultiple(pollType, count) {
-    return (pollType === I18n.t("poll.ui_builder.poll_type.multiple")) && count > 0;
+  @computed("pollType", "pollOptionsCount", "multiplePollType")
+  isMultiple(pollType, count, multiplePollType) {
+    return (pollType === multiplePollType) && count > 0;
   },
 
-  @computed("pollType")
-  isNumber(pollType) {
-    return pollType === I18n.t("poll.ui_builder.poll_type.number");
+  @computed("pollType", "numberPollType")
+  isNumber(pollType, numberPollType) {
+    return pollType === numberPollType;
   },
 
   @computed("isNumber", "isMultiple")
@@ -86,12 +92,17 @@ export default Ember.Controller.extend({
     return this._comboboxOptions(1, (parseInt(pollMax) || 1) + 1);
   },
 
-  @computed("isNumber", "showMinMax", "pollName", "pollType", "publicPoll", "pollOptions", "pollMin", "pollMax", "pollStep")
-  pollOutput(isNumber, showMinMax, pollName, pollType, publicPoll, pollOptions, pollMin, pollMax, pollStep) {
+  @computed("isNumber", "showMinMax", "pollType", "publicPoll", "pollOptions", "pollMin", "pollMax", "pollStep")
+  pollOutput(isNumber, showMinMax, pollType, publicPoll, pollOptions, pollMin, pollMax, pollStep) {
     let pollHeader = '[poll';
     let output = '';
 
-    if (pollName) pollHeader += ` name=${pollName.replace(' ', '-')}`;
+    const match = this.get("toolbarEvent").getText().match(/\[poll(\s+name=[^\s\]]+)*.*\]/igm);
+
+    if (match) {
+      pollHeader += ` name=poll${match.length + 1}`;
+    };
+
     if (pollType) pollHeader += ` type=${pollType}`;
     if (pollMin && showMinMax) pollHeader += ` min=${pollMin}`;
     if (pollMax) pollHeader += ` max=${pollMax}`;
@@ -121,7 +132,7 @@ export default Ember.Controller.extend({
       options = { failed: true, reason: I18n.t("poll.ui_builder.help.options_count") };
     }
 
-    return Discourse.InputValidation.create(options);
+    return InputValidation.create(options);
   },
 
   _comboboxOptions(start_index, end_index) {
@@ -132,8 +143,6 @@ export default Ember.Controller.extend({
 
   _setupPoll() {
     this.setProperties({
-      pollName: '',
-      pollNamePlaceholder: I18n.t("poll.ui_builder.poll_name.placeholder"),
       pollType: null,
       publicPoll: false,
       pollOptions: '',
@@ -147,6 +156,7 @@ export default Ember.Controller.extend({
     insertPoll() {
       this.get("toolbarEvent").addText(this.get("pollOutput"));
       this.send("closeModal");
+      this._setupPoll();
     }
   }
 });

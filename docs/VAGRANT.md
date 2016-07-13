@@ -92,11 +92,18 @@ bundle exec rails s -b 0.0.0.0
 
 In a few seconds, rails will start serving pages. To access them, open a web browser to [http://localhost:4000](http://localhost:4000) - if it all worked you should see discourse! Congratulations, you are ready to start working!
 
-If you want to log in as a user, a shortcut you can use in development mode is to follow this link to log in as `eviltrout`:
-
-[http://localhost:4000/session/eviltrout/become](http://localhost:4000/session/eviltrout/become)
-
 You can now edit files on your local file system, using your favorite text editor or IDE. When you reload your web browser, it should have the latest changes.
+
+### Creating an Admin User
+
+You'll want an admin account to be able to do anything fun on your new Discourse environment. Enter your vagrant image by using `vagrant ssh` then
+run the following command and follow the instructions:
+
+```bash
+rake admin:create
+```
+
+Your admin account should be approved. Log in in your browser and you're good to go!
 
 ### Tests
 

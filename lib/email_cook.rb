@@ -3,7 +3,7 @@
 class EmailCook
 
   def self.url_regexp
-    /[^\>]*((?:https?:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.])(?:[^\s()<>]+|\([^\s()<>]+\))+(?:\([^\s()<>]+\)|[^`!()\[\]{};:'".,<>?«»\s]))/
+    /^((?:https?:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.])(?:[^\s()<>]+|\([^\s()<>]+\))+(?:\([^\s()<>]+\)|[^`!()\[\]{};:'".,<>?«»“”‘’\s]))/
   end
 
   def initialize(raw)
@@ -13,7 +13,9 @@ class EmailCook
   def cook
     result = ""
 
+    in_text = false
     in_quote = false
+
     quote_buffer = ""
     @raw.each_line do |l|
 
@@ -26,11 +28,24 @@ class EmailCook
         in_quote = false
       else
 
+        sz = l.size
+
         l.scan(EmailCook.url_regexp).each do |m|
           url = m[0]
           l.gsub!(url, "<a href='#{url}'>#{url}</a>")
         end
-        result << l << "<br>"
+
+        result << l
+
+        if sz < 60
+          result << "<br>"
+          if in_text
+            result << "<br>"
+          end
+          in_text = false
+        else
+          in_text = true
+        end
       end
     end
 
@@ -38,7 +53,7 @@ class EmailCook
       result << "<blockquote>#{quote_buffer}</blockquote>"
     end
 
-    result.gsub!(/(<br>){3,10}/, '<br><br>')
+    result.gsub!(/(<br>\n*){3,10}/, '<br><br>')
     result
   end
 

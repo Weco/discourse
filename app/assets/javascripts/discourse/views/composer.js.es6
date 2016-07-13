@@ -22,7 +22,6 @@ const ComposerView = Ember.View.extend({
   },
 
   movePanels(sizePx) {
-
     $('#main-outlet').css('padding-bottom', sizePx);
 
     // signal the progress bar it should move!
@@ -71,6 +70,7 @@ const ComposerView = Ember.View.extend({
   keyDown(e) {
     if (e.which === 27) {
       this.get('controller').send('hitEsc');
+      this.get('controller').send('hideOptions');
       return false;
     } else if (e.which === 13 && (e.ctrlKey || e.metaKey)) {
       // CTRL+ENTER or CMD+ENTER
@@ -102,6 +102,13 @@ const ComposerView = Ember.View.extend({
       triggerOpen();
     });
     positioningWorkaround(this.$());
+
+    this.appEvents.on('composer:resize', this, this.resize);
+  },
+
+  willDestroyElement() {
+    this._super();
+    this.appEvents.off('composer:resize', this, this.resize);
   },
 
   click() {

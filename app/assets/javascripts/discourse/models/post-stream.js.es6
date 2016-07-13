@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import DiscourseURL from 'discourse/lib/url';
 import RestModel from 'discourse/models/rest';
 import PostsWithPlaceholders from 'discourse/lib/posts-with-placeholders';
@@ -471,7 +472,7 @@ export default RestModel.extend({
     const url = "/posts/" + postId;
     const store = this.store;
 
-    return Discourse.ajax(url).then(p => this.storePost(store.createRecord('post', p)));
+    return ajax(url).then(p => this.storePost(store.createRecord('post', p)));
   },
 
   /**
@@ -513,7 +514,7 @@ export default RestModel.extend({
       // need to insert into stream
       const url = "/posts/" + postId;
       const store = this.store;
-      return Discourse.ajax(url).then(p => {
+      return ajax(url).then(p => {
         const post = store.createRecord('post', p);
         const stream = this.get("stream");
         const posts = this.get("posts");
@@ -554,7 +555,7 @@ export default RestModel.extend({
       const url = "/posts/" + postId;
       const store = this.store;
 
-      return Discourse.ajax(url).then(p => {
+      return ajax(url).then(p => {
         this.storePost(store.createRecord('post', p));
       }).catch(() => {
         this.removePosts([existing]);
@@ -571,7 +572,7 @@ export default RestModel.extend({
     if (existing && existing.updated_at !== updatedAt) {
       const url = "/posts/" + postId;
       const store = this.store;
-      return Discourse.ajax(url).then(p => this.storePost(store.createRecord('post', p)));
+      return ajax(url).then(p => this.storePost(store.createRecord('post', p)));
     }
     return resolved;
   },
@@ -764,7 +765,7 @@ export default RestModel.extend({
     const url = "/t/" + this.get('topic.id') + "/posts.json";
     const data = { post_ids: postIds };
     const store = this.store;
-    return Discourse.ajax(url, {data}).then(result => {
+    return ajax(url, {data}).then(result => {
       const posts = Ember.get(result, "post_stream.posts");
       if (posts) {
         posts.forEach(p => this.storePost(store.createRecord('post', p)));

@@ -382,6 +382,9 @@ export default createWidget('post-menu', {
   },
 
   like() {
+    if (!this.currentUser) {
+      return this.sendWidgetAction('showLogin');
+    }
     const attrs = this.attrs;
     if (attrs.liked) {
       return this.sendWidgetAction('toggleLike');

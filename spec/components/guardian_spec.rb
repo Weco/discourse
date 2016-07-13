@@ -144,8 +144,9 @@ describe Guardian do
       expect(Guardian.new(user).can_send_private_message?(nil)).to be_falsey
     end
 
-    it "returns false when the target is the same as the user" do
-      expect(Guardian.new(user).can_send_private_message?(user)).to be_falsey
+    it "returns true when the target is the same as the user" do
+      # this is now allowed so yay
+      expect(Guardian.new(user).can_send_private_message?(user)).to be_truthy
     end
 
     it "returns false when you are untrusted" do
@@ -1206,6 +1207,14 @@ describe Guardian do
 
     it 'returns false with a nil object' do
       expect(Guardian.new(user).can_moderate?(nil)).to be_falsey
+    end
+
+    context 'when user is blocked' do
+      it 'returns false' do
+        user.toggle!(:blocked)
+        expect(Guardian.new(user).can_moderate?(post)).to be(false)
+        expect(Guardian.new(user).can_moderate?(topic)).to be(false)
+      end
     end
 
     context 'a Topic' do

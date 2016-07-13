@@ -1,14 +1,18 @@
 # Available options:
 #
-# default   - The default value of the setting.
-# client    - Set to true if the javascript should have access to this setting's value.
-# refresh   - Set to true if clients should refresh when the setting is changed.
-# min       - For a string setting, the minimum length. For an integer setting, the minimum value.
-# max       - For a string setting, the maximum length. For an integer setting, the maximum value.
-# regex     - A regex that the value must match.
-# validator - The name of the class that will be use to validate the value of the setting.
-# enum      - The setting has a fixed set of allowed values, and only one can be chosen.
-#             Set to the class name that defines the set.
+# default            - The default value of the setting.
+# client             - Set to true if the javascript should have access to this setting's value.
+# refresh            - Set to true if clients should refresh when the setting is changed.
+# min                - For a string setting, the minimum length. For an integer setting, the minimum value.
+# max                - For a string setting, the maximum length. For an integer setting, the maximum value.
+# regex              - A regex that the value must match.
+# validator          - The name of the class that will be use to validate the value of the setting.
+# enum               - The setting has a fixed set of allowed values, and only one can be chosen.
+#                      Set to the class name that defines the set.
+# shadowed_by_global - "Shadow" a site setting with a GlobalSetting. If the GlobalSetting
+#                      exists it will be used instead of the setting and the setting will be hidden.
+#                      Useful for things like API keys on multisite.
+#
 # type: email    - Must be a valid email address.
 # type: username - Must match the username of an existing user.
 # type: list     - A list of values, chosen from a set of valid values defined in the choices option.
@@ -19,9 +23,9 @@
 required:
   title:
     client: true
-    default: 'Open Companies'
+    default: 'Discourse'
   site_description:
-    default: 'Open Companies'
+    default: ''
   contact_email:
     client: true
     default: ''
@@ -30,7 +34,7 @@ required:
     client: true
     default: ''
   notification_email:
-    default: 'noreply@open.xyz'
+    default: 'noreply@unconfigured.discourse.org'
     type: email
     shadowed_by_global: true
   site_contact_username:
@@ -38,19 +42,19 @@ required:
     type: username
   logo_url:
     client: true
-    default: '/images/logo@2x.png'
+    default: '/images/d-logo-sketch.png'
   logo_small_url:
     client: true
-    default: '/images/logo-single@2x.png'
+    default: '/images/d-logo-sketch-small.png'
   digest_logo_url:
     default: ''
   mobile_logo_url:
     client: true
-    default: '/images/logo-single@2x.png'
+    default: ''
   favicon_url:
     client: true
-    default: '/images/favicon.ico'
-  apple_touch_icon_url: '/images/apple-touch-icon.png'
+    default: '/images/default-favicon.ico'
+  apple_touch_icon_url: '/images/default-apple-touch-icon.png'
   exclude_rel_nofollow_domains:
     default: ''
     type: list
@@ -72,7 +76,11 @@ basic:
     default: 5
     min: 0
   limit_suggested_to_category:
-    default: true
+    default: false
+  suggested_topics_max_days_old:
+    default: 365
+    min: 7
+    max: 10000
   track_external_right_clicks:
     client: true
     default: false
@@ -93,7 +101,7 @@ basic:
     client: true
     refresh: true
     type: list
-    default: "categories|latest|new|unread|top"
+    default: "latest|new|unread|top|categories"
     regex: "latest"
     regex_error: "site_settings.errors.must_include_latest"
     choices:
@@ -108,7 +116,7 @@ basic:
   post_menu:
     client: true
     type: list
-    default: 'reply|comments|share|flag|bookmark|edit|delete|admin'
+    default: 'like-count|like|share|flag|edit|bookmark|delete|admin|reply'
     choices:
      - like-count
      - like
@@ -183,7 +191,7 @@ basic:
     min: 1
   fixed_category_positions:
     client: true
-    default: true
+    default: false
 
   fixed_category_positions_on_create:
     client: true
@@ -289,6 +297,7 @@ login:
   pending_users_reminder_delay:
     min: -1
     default: 8
+  permanent_session_cookie: true
 
 users:
   min_username_length:
@@ -305,11 +314,11 @@ users:
     default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support"
   min_password_length:
     client: true
-    default: 8
+    default: 10
     min: 1
   min_admin_password_length:
     client: true
-    default: 12
+    default: 15
     min: 1
   block_common_passwords: true
   enforce_global_nicknames:
@@ -346,7 +355,7 @@ users:
     default: false
   prioritize_username_in_ux:
     client: true
-    default: false
+    default: true
   email_token_valid_hours:
     default: 24
     min: 1
@@ -357,7 +366,7 @@ users:
     default: ''
   staff_user_custom_fields:
     type: list
-    default: 'reputation'
+    default: ''
   enable_user_directory:
     client: true
     default: true
@@ -413,7 +422,7 @@ posting:
     min: 1
   allow_uncategorized_topics:
     client: true
-    default: false
+    default: true
     refresh: true
   allow_duplicate_topic_titles: false
   min_title_similar_length:
@@ -465,9 +474,15 @@ posting:
     client: true
     default: 0
   post_excerpt_maxlength: 300
-  display_name_on_posts:
+  show_pinned_excerpt_mobile:
     client: true
     default: true
+  show_pinned_excerpt_desktop:
+    client: true
+    default: true
+  display_name_on_posts:
+    client: true
+    default: false
   show_time_gap_days:
     default: 7
     client: true
@@ -480,7 +495,7 @@ posting:
   warn_reviving_old_topic_age: 180
   autohighlight_all_code:
     client: true
-    default: true
+    default: false
   highlighted_languages:
     default: 'apache|bash|cs|cpp|css|coffeescript|diff|xml|http|ini|json|java|javascript|makefile|markdown|nginx|objectivec|ruby|perl|php|python|sql|handlebars'
     choices: 'HighlightJs.languages'
@@ -511,6 +526,13 @@ posting:
     min: 0
   auto_close_messages_post_count: 500
   auto_close_topics_post_count: 10000
+  code_formatting_style:
+    client: true
+    type: enum
+    default: '4-spaces-indent'
+    choices:
+     - 4-spaces-indent
+     - code-fences
 
 email:
   email_time_window_mins:
@@ -534,9 +556,9 @@ email:
     validator: "ReplyByEmailEnabledValidator"
   reply_by_email_address:
     default: ''
-    validator: "AlternativeReplyByEmailAddressesValidator"
   alternative_reply_by_email_addresses:
     default: ''
+    validator: "AlternativeReplyByEmailAddressesValidator"
   manual_polling_enabled:
     default: false
   pop3_polling_enabled:
@@ -619,6 +641,10 @@ files:
       test: false
       default: true
   download_remote_images_threshold: 10
+  download_remote_images_max_days_old:
+    default: 30
+    min: 1
+    max: 10000
   disabled_image_download_domains:
     type: list
     default: ''
@@ -753,7 +779,9 @@ trust:
     client: true
 
 security:
-  use_https: false
+  force_https:
+    default: false
+    shadowed_by_global: true
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   enable_noscript_support: true
@@ -776,7 +804,7 @@ spam:
   add_rel_nofollow_to_user_content: true
   flags_required_to_hide_post: 3
   cooldown_minutes_after_hiding_posts: 10
-  num_flags_to_block_new_user: 3
+  num_spam_flags_to_block_new_user: 3
   num_users_to_block_new_user: 3
   num_tl3_flags_to_block_new_user: 6
   num_tl3_users_to_block_new_user: 4
@@ -936,7 +964,7 @@ legal:
 
 backups:
   allow_restore:
-    default: true
+    default: false
   maximum_backups:
     client: true
     default: 5
@@ -1192,12 +1220,12 @@ user_preferences:
 tags:
   tagging_enabled:
     client: true
-    default: true
+    default: false
     refresh: true
   tag_style:
     client: true
     type: enum
-    default: 'box'
+    default: 'simple'
     choices:
      - simple
      - bullet
@@ -1222,7 +1250,7 @@ tags:
     min: 1
   show_filter_by_tag:
     client: true
-    default: true
+    default: false
     refresh: true
   max_tags_in_filter_list:
     default: 30

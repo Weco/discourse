@@ -9,7 +9,6 @@ require_dependency 'topic_query_sql'
 require_dependency 'avatar_lookup'
 
 class TopicQuery
-  # Could be rewritten to %i if Ruby 1.9 is no longer supported
   VALID_OPTIONS = %i(except_topic_ids
                      exclude_category_ids
                      limit
@@ -355,10 +354,10 @@ class TopicQuery
       options = @options
       options.reverse_merge!(per_page: per_page_setting)
 
-      result = Topic
+      result = Topic.includes(:tags)
 
       if type == :group
-        result = result.includes(:allowed_groups)
+        result = result.includes(:allowed_users)
         result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_groups
                                               WHERE group_id IN (
                                                   SELECT group_id FROM group_users WHERE user_id = #{user.id.to_i}) AND
@@ -460,7 +459,6 @@ class TopicQuery
 
         if @options[:tags] && @options[:tags].size > 0
           result = result.joins(:tags)
-
           # ANY of the given tags:
           if @options[:tags][0].is_a?(Integer)
             result = result.where("tags.id in (?)", @options[:tags])

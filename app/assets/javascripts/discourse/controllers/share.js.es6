@@ -26,14 +26,14 @@ export default Ember.Controller.extend({
   // Close the share controller
   actions: {
     close() {
-      this.setProperties({ link: '', postNumber: '' });
+      this.setProperties({ link: null, postNumber: null, postId: null });
       return false;
     },
 
     replyAsNewTopic() {
       const topicController = this.get("controllers.topic");
       const postStream = topicController.get("model.postStream");
-      const postId = postStream.findPostIdForPostNumber(this.get("postNumber"));
+      const postId = this.get("postId") || postStream.findPostIdForPostNumber(1);
       const post = postStream.findLoadedPost(postId);
       topicController.send("replyAsNewTopic", post);
       this.send("close");

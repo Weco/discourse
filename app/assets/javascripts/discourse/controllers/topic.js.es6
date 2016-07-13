@@ -256,6 +256,10 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       return this.get('model.details').removeAllowedUser(user);
     },
 
+    removeAllowedGroup(group) {
+      return this.get('model.details').removeAllowedGroup(group);
+    },
+
     deleteTopic() {
       this.deleteTopic();
     },
@@ -754,7 +758,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   },
 
   deleteTopic() {
-    this.unsubscribe();
     this.get('content').destroy(Discourse.User.current());
   },
 
