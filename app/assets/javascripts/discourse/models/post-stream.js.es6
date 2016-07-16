@@ -423,7 +423,7 @@ export default RestModel.extend({
           post_number: stored.reply_to_post_number
         });
 
-        if (parent.get('id')) {
+        if (parent && parent.get('id')) {
           const replyIndex = _.findIndex(parent.replies, stored);
 
           parent.replies[replyIndex === -1 ? parent.replies.length : replyIndex] = stored;

@@ -1,8 +1,10 @@
 import StringBuffer from 'discourse/mixins/string-buffer';
+import Post from 'discourse/models/post';
+import { transformBasicPost } from 'discourse/lib/transform-post';
 
-export default Ember.Component.extend(StringBuffer, {
+export default Ember.Component.extend({
   rerenderTriggers: ['bulkSelectEnabled', 'topic.pinned'],
-  tagName: 'tr',
+  tagName: 'div',
   rawTemplate: 'list/topic-list-item.raw',
   classNameBindings: [':topic-list-item', 'unboundClassNames'],
   attributeBindings: ['data-topic-id'],
@@ -13,6 +15,41 @@ export default Ember.Component.extend(StringBuffer, {
       this.get('topic').toggleBookmark().finally(() => this.rerender());
     }
   },
+
+  posts: function() {
+    const topic = this.get('topic');
+    const posts = topic.get('posts') || [];
+    const transform = post => {
+      const model = Post.create(Object.assign({ topic }, post));
+      const transformed = transformBasicPost(model);//transformPost(this.currentUser, this.site, model);
+
+      transformed.mobileView = this.site.mobileView;
+
+      return {
+        args: transformed,
+        model
+      };
+    };
+    const result = {};
+
+    if (posts && posts.length) {
+      const main = posts.filter(post => post.post_number === 1)[0];
+
+      if (main) {
+        result.main = transform(main);
+
+        if (topic.get('has_rating')) {
+          const solution = _(posts).filter(post => post.id !== main.id).sortBy('rating').reverse().value()[0];
+
+          if (solution && solution !== main) {
+            result.solution = transform(solution);
+          }
+        }
+      }
+    }
+
+    return result;
+  }.property(),
 
   unboundClassNames: function() {
     let classes = [];

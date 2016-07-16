@@ -4,20 +4,6 @@
 
 <div class="list-controls">
   <div class="container">
-    {{#if tagNotification}}
-      {{tag-notifications-button action="changeTagNotification"
-                                 notificationLevel=tagNotification.notification_level}}
-    {{/if}}
-
-    {{#if showAdminControls}}
-      {{d-button action="deleteTag" label="tagging.delete_tag" icon="trash-o" class="admin-tag btn-danger"}}
-      {{d-button action="renameTag" actionParam=tag label="tagging.rename_tag" icon="pencil" class="admin-tag"}}
-    {{else}}
-      {{#if canCreateTopic}}
-        <button id="create-topic" class='btn btn-default' {{action "createTopic"}}><i class='fa fa-plus'></i>{{i18n 'topic.create'}}</button>
-      {{/if}}
-    {{/if}}
-
     {{#if showTagFilter}}
       {{bread-crumbs categories=categories
                      category=category
@@ -33,12 +19,25 @@
         {{discourse-tag-bound tagRecord=tag style="simple"}}
       </h2>
     {{/if}}
+    {{#if tagNotification}}
+      {{tag-notifications-button action="changeTagNotification"
+                                 notificationLevel=tagNotification.notification_level}}
+    {{/if}}
+
+    {{#if showAdminControls}}
+      {{d-button action="deleteTag" label="tagging.delete_tag" icon="trash-o" class="admin-tag btn-danger"}}
+      {{d-button action="renameTag" actionParam=tag label="tagging.rename_tag" icon="pencil" class="admin-tag"}}
+    {{else}}
+      {{#if canCreateTopic}}
+        <button id="create-topic" class='btn btn-default' {{action "createTopic"}}><i class='fa fa-plus'></i>{{i18n 'topic.create'}}</button>
+      {{/if}}
+    {{/if}}
   </div>
 </div>
 
 {{plugin-outlet "discovery-list-container-top"}}
 
-<footer class='topic-list-bottom'>
+<div class="container list-container">
   {{conditional-loading-spinner condition=loading}}
 
   {{#unless loading}}
@@ -64,4 +63,4 @@
       </h3>
     {{/if}}
   {{/unless}}
-</footer>
+</div>

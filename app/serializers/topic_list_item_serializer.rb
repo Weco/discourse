@@ -14,9 +14,14 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
   has_many :participants, serializer: TopicPosterSerializer, embed: :objects
+  has_many :posts, serializer: PostSerializer, embed: :objects
 
   def posters
     object.posters || []
+  end
+
+  def posts
+    object.posts || []
   end
 
   def op_like_count

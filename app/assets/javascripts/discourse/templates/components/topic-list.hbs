@@ -1,4 +1,5 @@
 {{#unless skipHeader}}
+<table class="topic-list-order">
   <thead>
     {{raw "topic-list-header" currentUser=currentUser
                               canBulkSelect=canBulkSelect
@@ -14,19 +15,18 @@
                               siteSettings=siteSettings
                               bulkSelectEnabled=bulkSelectEnabled}}
   </thead>
+</table>
 {{/unless}}
-<tbody>
-  {{#each topics as |topic|}}
-    {{topic-list-item topic=topic
-                      bulkSelectEnabled=bulkSelectEnabled
-                      showTopicPostBadges=showTopicPostBadges
-                      hideCategory=hideCategory
-                      showPosters=showPosters
-                      showParticipants=showParticipants
-                      showLikes=showLikes
-                      showOpLikes=showOpLikes
-                      expandGloballyPinned=expandGloballyPinned
-                      expandAllPinned=expandAllPinned
-                      selected=selected}}
-  {{/each}}
-</tbody>
+{{#each topics as |topic|}}
+  {{topic-list-item topic=topic
+                    bulkSelectEnabled=bulkSelectEnabled
+                    showTopicPostBadges=showTopicPostBadges
+                    hideCategory=hideCategory
+                    showPosters=showPosters
+                    showParticipants=showParticipants
+                    showLikes=showLikes
+                    showOpLikes=showOpLikes
+                    expandGloballyPinned=expandGloballyPinned
+                    expandAllPinned=expandAllPinned
+                    selected=selected}}
+{{/each}}

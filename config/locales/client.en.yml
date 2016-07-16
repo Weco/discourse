@@ -1629,6 +1629,9 @@ en:
         like: "like this post"
         has_liked: "you've liked this post"
         undo_like: "undo like"
+        solution:
+          one: "1 Solution"
+          other: "{{count}} Solutions"
         edit: "edit this post"
         edit_anonymous: "Sorry, but you need to be logged in to edit this post."
         flag: "privately flag this post for attention or send a private notification about it"

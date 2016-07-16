@@ -1,0 +1,35 @@
+<div class="topic-list-item">
+  {{#if bulkSelectEnabled}}
+    <input type="checkbox" class="bulk-select">
+  {{/if}}
+  <div class="title-wrapper">
+    {{#unless topic.isPrivateMessage}}
+      {{topic-category topic=topic}}
+    {{/unless}}
+    <h1>
+      {{raw "topic-status" topic=topic}}
+      {{topic-link topic}}
+      {{plugin-outlet "topic-list-after-title"}}
+    </h1>
+    {{#if showTopicPostBadges}}
+      {{raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl}}
+    {{/if}}
+    {{plugin-outlet "topic-list-tags"}}
+    {{#if expandPinned}}
+      {{raw "list/topic-excerpt" topic=topic}}
+    {{/if}}
+    {{raw "list/action-list" topic=topic postNumbers=topic.liked_post_numbers className="likes" icon="heart"}}
+  </div>
+
+  {{#if posts.main}}
+    <div class="topic-list-item-post main">
+      {{mount-widget widget="topic-list-item" model=posts.main.model args=posts.main.args }}
+    </div>
+  {{/if}}
+  {{#if posts.solution}}
+    <div class="topic-list-item-post solution">
+      <h3>Best solution</h3>
+      {{mount-widget widget="topic-list-item" model=posts.solution.model args=posts.solution.args }}
+    </div>
+  {{/if}}
+</div>

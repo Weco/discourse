@@ -1,0 +1,182 @@
+.topic-list-order {
+    width: 100%;
+    border-collapse: separate;
+	border-spacing: 4px 0;
+    margin-bottom: 20px;
+
+    th {
+        display: none;
+        padding: 5px 0;
+        margin: 0;
+
+        &.sortable {
+            display: table-cell;
+            width: auto;
+            text-align: center;
+            border-radius: 3px;
+            padding: 5px 10px;
+            white-space: nowrap;
+
+            &.sorting {
+                background-color: #e9e9e9;
+            }
+        }
+
+        &.default {
+            display: table-cell;
+            width: 100%;
+            padding-left: 0;
+            color: transparent;
+        }
+    }
+
+    #suggested-topics & {
+        display: none;
+    }
+}
+
+.topic-list-item {
+    padding-top: 10px;
+
+    table.topic-list-order + & {
+        padding-top: 0;
+
+        .topic-body {
+            border-top: 0;
+        }
+    }
+
+    a.title {
+        &,
+        &.visited:not(.badge-notification) {
+            font-size: 19px;
+            color: #333;
+            letter-spacing: -0.5px;
+        	line-height: 1.25;
+        	font-weight: bold;
+        }
+    }
+
+    .title-wrapper > h1 {
+        width: 100%;
+        padding-top: 10px;
+        clear: both;
+    }
+
+    .badge-wrapper.bullet {
+        float: left;
+    }
+
+    .topic-body {
+        border-bottom: 1px solid #e2e2e2;
+
+        .coocked {
+            height: 80px;
+
+            &.full {
+                height: auto;
+            }
+        }
+    }
+}
+
+.topic-list-item-post {
+    &.solution {
+        font-size: 13px;
+        padding: 8px;
+        margin-top: -1px;
+        background: #f6f6f6;
+        border: 1px solid #e2e2e2;
+        border-radius: 2px;
+        display: inline-block;
+        margin-bottom: 20px;
+
+        .topic-body {
+            border-bottom: 0;
+            padding-bottom: 0;
+
+            &:after {
+            	content: '';
+            	position: absolute;
+            	width: 100%;
+            	border-bottom: 1px solid #e2e2e2;
+            	bottom: -20px;
+            	left: -10px;
+            }
+        }
+    }
+}
+
+.list-controls {
+    float: left;
+    width: 180px;
+    margin-right: 20px;
+
+    .category-breadcrumb {
+        float: none;
+        margin: 0 0 10px 0;
+
+        > li.bullet {
+            float: none;
+            margin: 0;
+            background: #E9E9E6;
+            border-radius: 3px;
+            overflow: hidden;
+
+            > .badge-category {
+                background-color: none;
+
+                .badge-category-bg {
+                    width: 16px;
+                    height: 16px;
+                    display: inline-block;
+                    margin: 2px 2px 2px 0;
+                    border-radius: 3px;
+                    vertical-align: top;
+                }
+            }
+        }
+    }
+
+    .category-dropdown-menu {
+        border-top: 0;
+        border-radius: 0 0 3px 3px;
+        margin: 0 2px;
+    }
+
+    .nav-pills {
+        float: none;
+        margin: 0 0 10px 0;
+
+        > li {
+            float: none;
+            margin: 0 0 5px 0;
+        }
+    }
+
+    .btn {
+        float: none;
+        width: 100%;
+        font-size: 1em;
+        text-align: left;
+        margin-left: 0;
+    }
+
+    .category-notification-menu .dropdown-menu {
+        left: 0;
+        right: auto;
+    }
+
+    .notification-options.tag-notification-menu {
+        float: none;
+        margin: 0;
+    }
+
+    #list-area & .tag-show-heading {
+        margin: 3px 0 20px;
+    }
+}
+
+.list-container {
+	overflow: hidden;
+}

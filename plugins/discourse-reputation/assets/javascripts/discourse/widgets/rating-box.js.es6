@@ -35,8 +35,7 @@ export default createWidget('rating-box', {
             data: { post_id: this.attrs.id }
         })
         .then(result => {
-            const topicController = this.container.lookup('controller:topic');
-            const post = topicController && topicController.get('model.postStream.posts').findBy('id', this.attrs.id);
+            const post = this.findAncestorModel();
 
             if (post) {
                 post.set('rating', result.rating);

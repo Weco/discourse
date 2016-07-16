@@ -138,5 +138,11 @@ body {
 
 // Navigation
 .nav-pills {
+    > li > a {
+        border-radius: 3px;
+    }
+}
 
+.alert {
+    border-radius: 3px;
 }
