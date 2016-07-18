@@ -11,8 +11,9 @@ createWidget('topic-list-item-menu', {
   html(attrs, state) {
     const post = this.findAncestorModel();
     const buttons = [];
+    const isFirst = attrs.post_number === 1;
 
-    if (attrs.canCreatePost) {
+    if (isFirst && attrs.canCreatePost) {
       const args = {
         action: 'replyToPost',
         title: 'post.controls.reply',
@@ -30,18 +31,18 @@ createWidget('topic-list-item-menu', {
 
     if (attrs.has_rating) {
       buttons.push(this.attach('rating-box', attrs));
+    }
 
-      if (attrs.post_number === 1) {
-        const solutionsCount = post.get('topic.posts_count') - post.get('topic.reply_count') - 1;
+    if (isFirst) {
+      const repliesCount = post.get('topic.posts_count') - post.get('topic.reply_count') - 1;
 
-        if (solutionsCount && solutionsCount > 0) {
-          buttons.push(this.attach('button', {
-            action: 'goToTopic',
-            className: 'solutions text',
-            label: 'post.controls.solution',
-            labelOptions: { count: solutionsCount }
-          }));
-        }
+      if (repliesCount && repliesCount > 0) {
+        buttons.push(this.attach('button', {
+          action: 'goToTopic',
+          className: 'solutions text',
+          label: `post.controls.${attrs.has_rating ? 'solutions' : 'replies'}`,
+          counter: repliesCount
+        }));
       }
     }
 
@@ -55,22 +56,25 @@ createWidget('topic-list-item-menu', {
 
 
 createWidget('topic-list-item-contents-expand', {
-  tagName: 'span.more',
+  tagName: 'a.more',
 
   html() {
-    return 'show more';
+    return '(more)';
   },
 
-  click() {
+  click(event) {
     this.sendWidgetAction('expandContent');
+    event.preventDefault();
   }
 });
 
 createWidget('topic-list-item-contents', {
   buildKey: attrs => `topic-list-item-contents-${attrs.id}`,
 
+  maxLength: 250,
+
   defaultState(attrs) {
-    return { expanded: true };
+    return { expanded: attrs.cooked.length < (this.maxLength + 50) };
   },
 
   buildClasses(attrs) {
@@ -78,15 +82,50 @@ createWidget('topic-list-item-contents', {
   },
 
   html(attrs, state) {
-    const result = [new PostCooked(attrs, new DecoratorHelper(this))];
+    const cookedAttrs = Object.assign({}, attrs, {
+      cooked: this.state.expanded ? attrs.cooked : this.getPreview(attrs.cooked)
+    });
+    const result = [new PostCooked(cookedAttrs, new DecoratorHelper(this))];
 
-    result.push(applyDecorators(this, 'after-cooked', attrs, state));
+    result.push(applyDecorators(this, 'after-cooked', cookedAttrs, state));
 
-    // if (!this.state.expanded) {
-    //   result.push(this.attach('topic-list-item-contents-expand', attrs));
-    // }
+    if (!this.state.expanded) {
+      result.push(this.attach('topic-list-item-contents-expand', attrs));
+    }
 
     return result;
+  },
+
+  getPreview(html) {
+    const div = document.createElement("div");
+    let totalLength = 0;
+    let isOverflow = false;
+    const parse = node => {
+      [].slice.call(node.childNodes).forEach(child => {
+        if (isOverflow) {
+          node.removeChild(child);
+        } else {
+          if (child.childNodes.length) {
+            parse(child);
+          } else {
+            const text = child.textContent;
+
+            if (totalLength + text.length > this.maxLength) {
+              child.textContent = text.substr(0, this.maxLength - totalLength) + '...';
+              isOverflow = true;
+            } else {
+              totalLength += text.length;
+            }
+          }
+        }
+      });
+    }
+
+    div.innerHTML = html;
+
+    parse(div);
+
+    return div.innerHTML;
   },
 
   expandContent() {
@@ -108,6 +147,8 @@ export default createWidget('topic-list-item', {
   },
 
   html(attrs) {
+    attrs.rating = this.findAncestorModel().get('rating');
+
     return h('article.boxed.onscreen-post', [
       h('a.tabLoc', { attributes: { href: ''} }),
       h('div.row', [
@@ -120,12 +161,16 @@ export default createWidget('topic-list-item', {
     ]);
   },
 
+  replyToPost() {
+    return this.container.lookup('controller:topic').send('replyToPost', this.model);
+  },
+
   goToTopic() {
     const post = this.findAncestorModel();
     const topicUrl = post ? post.get('topic.url') : null;
 
     if (topicUrl) {
-      DiscourseURL.routeTo(topicUrl);
+      DiscourseURL.routeTo(topicUrl + '/2');
     }
   }
 });

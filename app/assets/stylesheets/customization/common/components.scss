@@ -138,8 +138,22 @@ body {
 
 // Navigation
 .nav-pills {
-    > li > a {
-        border-radius: 3px;
+    > li {
+        > a {
+            border-radius: 3px;
+
+            &:hover {
+                background-color: transparent;;
+                color: #2b6dad;
+            }
+        }
+
+        &.active {
+            > a {
+                background-color: #eee;
+                color: #222;
+            }
+        }
     }
 }
 

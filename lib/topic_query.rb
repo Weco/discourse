@@ -440,9 +440,6 @@ class TopicQuery
                        .references('tu')
       end
 
-      result = result.includes(:posts);
-
-
       category_id = get_category_id(options[:category])
       @options[:category_id] = category_id
       if category_id

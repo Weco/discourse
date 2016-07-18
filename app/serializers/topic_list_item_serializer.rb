@@ -10,18 +10,33 @@ class TopicListItemSerializer < ListableTopicSerializer
              :pinned_globally,
              :bookmarked_post_numbers,
              :liked_post_numbers,
-             :tags
+             :tags,
+             :can_create_post,
+             :draft_key
 
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
   has_many :participants, serializer: TopicPosterSerializer, embed: :objects
-  has_many :posts, serializer: PostSerializer, embed: :objects
+  has_one :first_post, serializmer: PostSerializer, embed: :objects
+  has_one :best_solution_post, serializer: PostSerializer, embed: :objects
 
   def posters
     object.posters || []
   end
 
-  def posts
-    object.posts || []
+  def first_post
+    object.first_post || nil
+  end
+
+  def best_solution_post
+    object.best_solution_post || nil
+  end
+
+  def can_create_post
+    true if scope.can_create?(Post, object)
+  end
+
+  def draft_key
+    object.draft_key
   end
 
   def op_like_count

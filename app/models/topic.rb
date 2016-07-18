@@ -114,6 +114,7 @@ class Topic < ActiveRecord::Base
   has_one :warning
 
   has_one :first_post, -> {where post_number: 1}, class_name: Post
+  has_one :best_solution_post, -> { order("(SELECT CASE WHEN EXISTS (SELECT true FROM post_custom_fields pcf WHERE pcf.post_id::integer = posts.id::integer AND pcf.name = 'rating') THEN (SELECT value::integer FROM post_custom_fields pcf WHERE pcf.post_id::integer = posts.id::integer AND pcf.name = 'rating') ELSE 0 END) DESC").where('posts.post_number != 1').limit(1) }, class_name: Post
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data

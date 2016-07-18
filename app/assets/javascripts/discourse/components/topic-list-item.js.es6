@@ -16,39 +16,17 @@ export default Ember.Component.extend({
     }
   },
 
-  posts: function() {
-    const topic = this.get('topic');
-    const posts = topic.get('posts') || [];
-    const transform = post => {
-      const model = Post.create(Object.assign({ topic }, post));
-      const transformed = transformBasicPost(model);//transformPost(this.currentUser, this.site, model);
+  firstPost: function() {
+    const firstPost = this.get('topic.first_post');
 
-      transformed.mobileView = this.site.mobileView;
+    return firstPost ? this.transformPost(firstPost) : null;
+  }.property(),
 
-      return {
-        args: transformed,
-        model
-      };
-    };
-    const result = {};
+  bestSolutionPost: function() {
+    const hasRating = this.get('topic.has_rating');
+    const bestSolutionPost = hasRating && this.get('topic.best_solution_post');
 
-    if (posts && posts.length) {
-      const main = posts.filter(post => post.post_number === 1)[0];
-
-      if (main) {
-        result.main = transform(main);
-
-        if (topic.get('has_rating')) {
-          const solution = _(posts).filter(post => post.id !== main.id).sortBy('rating').reverse().value()[0];
-
-          if (solution && solution !== main) {
-            result.solution = transform(solution);
-          }
-        }
-      }
-    }
-
-    return result;
+    return bestSolutionPost ? this.transformPost(bestSolutionPost) : null;
   }.property(),
 
   unboundClassNames: function() {
@@ -77,6 +55,19 @@ export default Ember.Component.extend({
              this.get('topic.isPinnedUncategorized') ? 2 : 1);
   }.property("topic.isPinnedUncategorized"),
 
+  transformPost(post) {
+    const topic = this.get('topic');
+    const model = Post.create(Object.assign({ topic }, post));
+    const transformed = transformBasicPost(model);
+
+    transformed.mobileView = this.site.mobileView;
+    transformed.canCreatePost = topic.get('can_create_post');
+
+    return {
+      args: transformed,
+      model
+    };
+  },
 
   hasLikes: function() {
     return this.get('topic.like_count') > 0;

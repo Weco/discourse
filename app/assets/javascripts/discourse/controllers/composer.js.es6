@@ -256,7 +256,7 @@ export default Ember.Controller.extend({
     },
 
     save() {
-      this.save();
+      this.save(true);
     },
 
     displayEditReason() {
