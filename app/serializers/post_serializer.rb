@@ -67,7 +67,8 @@ class PostSerializer < BasicPostSerializer
              :via_email,
              :is_auto_generated,
              :action_code,
-             :action_code_who
+             :action_code_who,
+             :is_better_solution
 
   def initialize(object, opts)
     super(object, opts)
@@ -332,6 +333,14 @@ class PostSerializer < BasicPostSerializer
 
   def include_is_auto_generated?
     object.via_email? && is_auto_generated
+  end
+
+  def is_better_solution
+    object.is_better_solution
+  end
+
+  def include_is_better_solution?
+    object.reply_to_post_number != nil
   end
 
   def version

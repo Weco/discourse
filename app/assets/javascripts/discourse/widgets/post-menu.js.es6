@@ -124,15 +124,26 @@ registerButton('share', attrs => {
   };
 });
 
-registerButton('comments', (attrs, state, siteSettings) => {
+registerButton('comments', attrs => {
   const replyCount = attrs.replyCount;
+  let label = 'post.';
 
   if (attrs.post_number === 1) { return; }
+
+  if (replyCount) {
+    if (attrs.has_rating) {
+      label += 'solutions_and_comments';
+    } else {
+      label += 'comments.other';
+    }
+  } else {
+    label += 'comments.one';
+  }
 
   return {
     action: replyCount ? 'toggleComments' : 'replyToPost',
     className: 'comments text',
-    label: `post.comments.${replyCount ? 'other' : 'one'}`,
+    label,
     counter: replyCount
   };
 });

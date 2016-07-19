@@ -1053,6 +1053,7 @@ en:
       uploading: "Uploading..."
       show_preview: 'show preview &raquo;'
       hide_preview: '&laquo; hide preview'
+      better_solution: 'Better solution'
 
       quote_post_title: "Quote whole post"
       bold_title: "Strong"
@@ -1576,9 +1577,10 @@ en:
       more_links: "{{count}} more..."
 
       unread: "Post is unread"
+      solutions_and_comments: "Better Solutions and Comments"
       comments:
         one: "Comment"
-        other: "Comments" #"Comments <span class='counter'>{{count}}</span>"
+        other: "Comments"
       has_replies:
         one: "{{count}} Reply"
         other: "{{count}} Replies"

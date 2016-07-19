@@ -174,6 +174,8 @@ class PostsController < ApplicationController
       edit_reason: params[:post][:edit_reason]
     }
 
+    changes[:custom_fields] = params[:post][:custom_fields] if params[:post][:custom_fields]
+
     # to stay consistent with the create api, we allow for title & category changes here
     if post.is_first_post?
       changes[:title] = params[:title] if params[:title]
@@ -568,6 +570,7 @@ class PostsController < ApplicationController
       whitelisted[:image_sizes] = params[:image_sizes]
       # TODO this does not feel right, we should name what meta_data is allowed
       whitelisted[:meta_data] = params[:meta_data]
+      whitelisted[:custom_fields] = params[:custom_fields]
     end
 
     # Staff are allowed to pass `is_warning`

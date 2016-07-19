@@ -30,20 +30,25 @@ export default createWidget('embedded-post', {
     const menu = [this.attach('post-menu', attrs, {
       state: { collapsed: false }
     })];
+    const body = [
+      this.attach('post-avatar', attrs),
+      this.attach('poster-name', attrs),
+    ];
 
     if (attrs.created_at) {
       menu.push(this.attach('post-date', attrs));
     }
 
+    if (attrs.isBetterSolution) {
+      body.push(h('span.better-solution', I18n.t('composer.better_solution')));
+    }
+
+    body.push.apply(body, [new PostCooked(attrs, new DecoratorHelper(this)), menu]);
+
     return [
       h('div.reply', {attributes: {'data-post-id': attrs.id}}, [
         h('div.row', [
-          h('div.topic-body', [
-            this.attach('post-avatar', attrs),
-            this.attach('poster-name', attrs),
-            new PostCooked(attrs, new DecoratorHelper(this)),
-            menu
-          ])
+          h('div.topic-body', body)
         ])
       ])
     ];

@@ -30,7 +30,8 @@ const CLOSED = 'closed',
         target_usernames: 'targetUsernames',
         typing_duration_msecs: 'typingTime',
         composer_open_duration_msecs: 'composerTime',
-        tags: 'tags'
+        tags: 'tags',
+        custom_fields: 'custom_fields'
       },
 
       _edit_topic_serializer = {
@@ -114,6 +115,13 @@ const Composer = RestModel.extend({
 
     return total;
   }.property().volatile(),
+
+  isReply: function() {
+    const post = this.get('post');
+    const action = this.get('action');
+
+    return post && (post.reply_to_post_number !== null || action === 'reply');
+  }.property('post', 'action'),
 
   archetype: function() {
     return this.get('archetypes').findProperty('id', this.get('archetypeId'));
@@ -467,6 +475,7 @@ const Composer = RestModel.extend({
       topicProps.loading = true;
 
       this.setProperties(topicProps);
+      this.set('isBetterSolution', opts.post.is_better_solution);
 
       this.store.find('post', opts.post.get('id')).then(function(post) {
         composer.setProperties({
@@ -541,6 +550,15 @@ const Composer = RestModel.extend({
 
     this.set('composeState', CLOSED);
 
+    const isBetterSolution = this.get('isBetterSolution');
+
+    if (typeof isBetterSolution === 'boolean') {
+      post.set('is_better_solution', isBetterSolution);
+      props.custom_fields = {
+        is_better_solution: isBetterSolution
+      };
+    }
+
     var rollback = throwAjaxError(function(){
       post.set('cooked', oldCooked);
       self.set('composeState', OPEN);
@@ -603,6 +621,15 @@ const Composer = RestModel.extend({
     });
 
     this.serialize(_create_serializer, createdPost);
+
+    if (this.get('isBetterSolution')) {
+      createdPost.setProperties({
+        custom_fields: {
+          is_better_solution: true
+        },
+        is_better_solution: true
+      });
+    }
 
     if (post) {
       createdPost.setProperties({

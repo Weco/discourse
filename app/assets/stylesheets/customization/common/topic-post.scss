@@ -208,6 +208,25 @@
         .names {
             float: none;
             line-height: 14px;
+            display: inline-block;
+
+            .second,
+            .profession {
+                display: none;
+            }
+        }
+
+        .better-solution {
+            display: inline-block;
+        	line-height: 14px;
+        	vertical-align: top;
+        	margin: -2px 0;
+        	background: #e2e2e2;
+        	padding: 2px 4px;
+        	color: #999;
+        	border-radius: 2px;
+        	font-size: 12px;
+            text-transform: lowercase;
         }
 
         .cooked {

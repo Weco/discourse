@@ -371,6 +371,10 @@ class Post < ActiveRecord::Base
     post_actions.active.where(post_action_type_id: PostActionType.flag_types.values).count != 0
   end
 
+  def is_better_solution
+    self.custom_fields["is_better_solution"] || false
+  end
+
   def unhide!
     self.update_attributes(hidden: false)
     self.topic.update_attributes(visible: true) if is_first_post?
@@ -650,6 +654,9 @@ class Post < ActiveRecord::Base
   end
 
 end
+
+# Adds default custom fields type for Post model
+Post.register_custom_field_type('is_better_solution', :boolean)
 
 # == Schema Information
 #
