@@ -95,8 +95,12 @@
                         background: transparent;
                         color: #999;
 
-                        &.counter .text {
-                            text-decoration: underline;
+                        &.counter {
+                            text-decoration: none;
+
+                            .text {
+                                text-decoration: underline;
+                            }
                         }
 
                         &:not(.counter) {
@@ -213,38 +217,38 @@
         .post-menu-area {
         	margin: 0;
         	float: left;
-        }
 
-        .actions .widget-button {
-            padding: 0;
-            margin: 0;
-            font-size: 1em;
-            float: left;
-            box-shadow: none;
+            .actions .widget-button {
+                padding: 0;
+                margin: 0;
+                font-size: 1em;
+                float: left;
+                box-shadow: none;
 
-            &:after {
-            	content: '·';
-            	position: relative;
-            	display: inline-block;
-            	text-align: center;
-            	width: 15px;
-            }
+                &:after {
+                	content: '·';
+                	position: relative;
+                	display: inline-block;
+                	text-align: center;
+                	width: 15px;
+                }
 
-            &:hover,
-            &.d-hover {
-                background: none;
-                text-decoration: underline;
-                color: #999;
-            }
+                &:hover,
+                &.d-hover {
+                    background: none;
+                    text-decoration: underline;
+                    color: #999;
+                }
 
-            &.share,
-            &.show-more-actions,
-            &.create-flag,
-            &.bookmark,
-            &.toggle-like,
-            &.share,
-            &.comments {
-                display: none;
+                &.share,
+                &.show-more-actions,
+                &.create-flag,
+                &.bookmark,
+                &.toggle-like,
+                &.share,
+                &.comments {
+                    display: none;
+                }
             }
         }
 

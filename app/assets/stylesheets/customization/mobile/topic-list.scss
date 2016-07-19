@@ -1,0 +1,54 @@
+.list-controls {
+    .btn {
+        float: left;
+        margin: 5px 5px 0 0;
+        padding: 5px 10px;
+    }
+
+    .category-breadcrumb,
+    .nav-pills {
+    	margin: 0;
+
+        > li {
+            margin: 5px 5px 0 0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+    }
+
+    .notification-options.tag-notification-menu {
+    	float: left;
+    	margin: 0;
+        padding: 0;
+    	clear: none;
+    }
+}
+
+.topic-list-item {
+    border-bottom: 1px solid #e2e2e2;
+}
+
+.topic-list-item-post {
+    .topic-post {
+        padding-bottom: 0;
+
+        article {
+            border: none;
+        }
+
+        .post-date {
+        	margin: 5px 0 0;
+        	display: inline-block;
+        }
+    }
+
+    &.best-solution {
+        > h3 {
+            margin: 0 0 10px;
+        }
+
+        article {
+            padding: 0;
+        }
+    }
+}
