@@ -6,12 +6,24 @@ export default createWidget('rating-button', {
     tagName: 'button.widget-button.rating',
 
     buildClasses(attrs) {
-        return attrs.type === 'up' ? 'btn' : 'text';
+        if (attrs.isReply) {
+            return `text${attrs.type === 'up' ? ' counter' : ''}`;
+        } else {
+            return attrs.type === 'up' ? 'btn' : 'text';
+        }
     },
 
     html(attrs) {
         if (attrs.type === 'up') {
-            return ['Upvote', h('span.divider'), attrs.rating.toString()];
+            const rating = attrs.rating.toString();
+
+            if (attrs.isReply) {
+                return [h('span.text', 'Upvote'), h('span.counter', rating)];
+            } else {
+                return ['Upvote', h('span.divider'), rating];
+            }
+
+            return result;
         } else {
             return 'Downvote';
         }

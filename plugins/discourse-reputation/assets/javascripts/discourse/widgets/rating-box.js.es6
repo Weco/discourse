@@ -12,11 +12,13 @@ export default createWidget('rating-box', {
     },
 
     html(attrs, state) {
+        const isReply = attrs.reply_to_post_number != null;
         const rateUpButton = this.attach('rating-button', {
             type: 'up',
-            rating: attrs.rating
+            rating: attrs.rating,
+            isReply
         });
-        const rateDownButton = this.attach('rating-button', { type: 'down' });
+        const rateDownButton = this.attach('rating-button', { type: 'down', isReply });
 
         return [rateUpButton, rateDownButton];
     },

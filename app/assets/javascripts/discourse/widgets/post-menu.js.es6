@@ -328,8 +328,10 @@ export default createWidget('post-menu', {
 
     const postControls = [];
 
-    if (attrs.has_rating && attrs.reply_to_post_number == null) {
-      visibleButtons.splice(attrs.canCreatePost ? 1 : 0, 0, this.attach('rating-box', attrs));
+    if (attrs.has_rating) {
+      const buttonPosition = attrs.canCreatePost && attrs.reply_to_post_number == null ? 1 : 0;
+
+      visibleButtons.splice(buttonPosition, 0, this.attach('rating-box', attrs));
     }
 
     if (attrs.post_number !== 1) {
