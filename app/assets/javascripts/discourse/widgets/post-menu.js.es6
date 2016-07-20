@@ -281,13 +281,10 @@ export default createWidget('post-menu', {
     });
 
     if (!attrs.reply_to_post_number) {
-      // Only show ellipsis if there is more than one button hidden
-      // if there are no more buttons, we are not collapsed
-      const isSecondaryVisible = !state.collapsed || (allButtons.length <= visibleButtons.length + 1);
+      const isSecondaryVisible = !state.collapsed
 
       if (isSecondaryVisible) {
         secondaryButtons = allButtons.filter(i => visibleButtons.indexOf(i) === -1);
-        if (state.collapsed) { state.collapsed = false; }
       }
 
       if (!isSecondaryVisible || !attrs.mobileView) {
