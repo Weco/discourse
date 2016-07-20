@@ -116,11 +116,11 @@ const Composer = RestModel.extend({
     return total;
   }.property().volatile(),
 
-  isReply: function() {
+  isSolutionReply: function() {
     const post = this.get('post');
     const action = this.get('action');
 
-    return post && (post.reply_to_post_number !== null || action === 'reply');
+    return post && post.get('has_rating') && (post.reply_to_post_number !== null || action === 'reply');
   }.property('post', 'action'),
 
   archetype: function() {

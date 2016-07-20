@@ -43,7 +43,7 @@
                 <a {{action "displayEditReason"}} class="display-edit-reason">{{i18n 'composer.show_edit_reason'}}</a>
               {{/if}}
             {{/if}}
-            {{#if model.isReply}}
+            {{#if model.isSolutionReply}}
               <label class="inline-label">
                 {{input type="checkbox" checked=model.isBetterSolution tabindex="3"}}
                 {{i18n 'composer.better_solution'}}
