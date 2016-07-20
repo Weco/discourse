@@ -26,30 +26,32 @@
         <div class='composer-fields'>
           {{plugin-outlet "composer-open"}}
 
-          <div class='reply-to'>
-            {{{model.actionTitle}}}
-            {{#unless site.mobileView}}
-            {{#if model.whisper}}
-              <span class='whisper'>({{i18n "composer.whisper"}})</span>
-            {{/if}}
-            {{/unless}}
-
-            {{#if canEdit}}
-              {{#if showEditReason}}
-                <div class="edit-reason-input">
-                  {{text-field autofocus="true" value=editReason tabindex="7" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
-                </div>
-              {{else}}
-                <a {{action "displayEditReason"}} class="display-edit-reason">{{i18n 'composer.show_edit_reason'}}</a>
+          {{#if model.notBestSolutionsWiki}}
+            <div class='reply-to'>
+              {{{model.actionTitle}}}
+              {{#unless site.mobileView}}
+              {{#if model.whisper}}
+                <span class='whisper'>({{i18n "composer.whisper"}})</span>
               {{/if}}
-            {{/if}}
-            {{#if model.isSolutionReply}}
-              <label class="inline-label">
-                {{input type="checkbox" checked=model.isBetterSolution tabindex="3"}}
-                {{i18n 'composer.better_solution'}}
-              </label>
-            {{/if}}
-          </div>
+              {{/unless}}
+
+              {{#if canEdit}}
+                {{#if showEditReason}}
+                  <div class="edit-reason-input">
+                    {{text-field autofocus="true" value=editReason tabindex="7" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
+                  </div>
+                {{else}}
+                  <a {{action "displayEditReason"}} class="display-edit-reason">{{i18n 'composer.show_edit_reason'}}</a>
+                {{/if}}
+              {{/if}}
+              {{#if model.isSolutionReply}}
+                <label class="inline-label">
+                  {{input type="checkbox" checked=model.isBetterSolution tabindex="3"}}
+                  {{i18n 'composer.better_solution'}}
+                </label>
+              {{/if}}
+            </div>
+          {{/if}}
 
           {{#if model.canEditTitle}}
             <div class='form-element clearfix'>

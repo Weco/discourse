@@ -3,6 +3,7 @@ en:
     reputation_enabled: 'Enable reputation plugin'
     reputation_min_value_to_vote_up: 'Minimal value of reputation to be able vote up for topics and posts'
     reputation_min_value_to_vote_down: 'Minimum value of reputation to be able vote down for topics and posts'
+    reputation_min_value_to_edit_wiki: 'Minimum value of reputation to be able edit wiki posts'
     reputation_min_value_to_create_tag: 'Minimum value of reputation to be able create new tags'
     reputation_min_value_to_edit_topics: 'Minimum value of reputation to be able edit topics and posts'
     reputation_min_value_to_delete_topics: 'Minimum value of reputation to be able delete topics and posts'

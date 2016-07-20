@@ -40,6 +40,7 @@ class PostSerializer < BasicPostSerializer
              :can_delete,
              :can_recover,
              :can_wiki,
+             :can_edit_wiki,
              :link_counts,
              :read,
              :user_title,
@@ -68,7 +69,8 @@ class PostSerializer < BasicPostSerializer
              :is_auto_generated,
              :action_code,
              :action_code_who,
-             :is_better_solution
+             :is_better_solution,
+             :best_solutions_wiki
 
   def initialize(object, opts)
     super(object, opts)
@@ -137,6 +139,10 @@ class PostSerializer < BasicPostSerializer
 
   def can_wiki
     scope.can_wiki?(object)
+  end
+
+  def can_edit_wiki
+    scope.can_edit_wiki?(object)
   end
 
   def display_username
@@ -341,6 +347,14 @@ class PostSerializer < BasicPostSerializer
 
   def include_is_better_solution?
     object.reply_to_post_number != nil
+  end
+
+  def best_solutions_wiki
+    object.best_solutions_wiki
+  end
+
+  def include_best_solutions_wiki?
+    object.post_number == 1 && object.topic.tags.map(&:name).include?('problem')
   end
 
   def version

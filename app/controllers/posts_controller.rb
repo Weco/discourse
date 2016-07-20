@@ -167,13 +167,10 @@ class PostsController < ApplicationController
       return render json: { errors: [I18n.t('too_late_to_edit')] }, status: 422
     end
 
-    guardian.ensure_can_edit!(post)
+    changes = {}
 
-    changes = {
-      raw: params[:post][:raw],
-      edit_reason: params[:post][:edit_reason]
-    }
-
+    changes[:raw] = params[:post][:raw] if params[:post][:raw]
+    changes[:edit_reason] = params[:post][:edit_reason] if params[:post][:edit_reason]
     changes[:custom_fields] = params[:post][:custom_fields] if params[:post][:custom_fields]
 
     # to stay consistent with the create api, we allow for title & category changes here
@@ -186,6 +183,12 @@ class PostsController < ApplicationController
     opts = {}
     if post.post_type == Post.types[:small_action] && current_user.staff?
       opts[:skip_validations] = true
+    end
+
+    if changes.length == 1 && changes[:custom_fields] && changes[:custom_fields][:best_solutions_wiki]
+      guardian.ensure_can_edit_wiki!(post)
+    else
+      guardian.ensure_can_edit!(post)
     end
 
     topic = post.topic

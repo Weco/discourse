@@ -374,7 +374,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       }
 
       // check if current user can edit post
-      if (!post.can_edit) {
+      if (!(post.isBestSolutionsWiki ? post.can_edit_wiki : post.can_edit)) {
         return false;
       }
 

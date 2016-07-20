@@ -8,6 +8,7 @@ import { h } from 'virtual-dom';
 import DiscourseURL from 'discourse/lib/url';
 import { dateNode } from 'discourse/helpers/node';
 import { translateSize, avatarUrl } from 'discourse/lib/utilities';
+import Post from 'discourse/models/post';
 
 export function avatarImg(wanted, attrs) {
   const size = translateSize(wanted);
@@ -293,6 +294,69 @@ createWidget('post-contents', {
   }
 });
 
+createWidget('best-solutions', {
+  buildKey: attrs => `best-solutions-${attrs.id}`,
+  tagName: 'div.best-solutions',
+
+  html(attrs, state) {
+    const model = this.findAncestorModel();
+    const cooked = model.get('best_solutions_wiki.cooked');
+    const result = [
+      h('h3', [
+        'Best solutions',
+        attrs.canEditWiki ? h('div.post-info.wiki', iconNode('pencil-square-o')) : ''
+      ])
+    ];
+
+    if (cooked) {
+      const wikiAttrs = Object.assign({}, attrs, { cooked });
+
+      result.push.apply(result, [
+        new PostCooked(wikiAttrs, new DecoratorHelper(this)),
+        applyDecorators(this, 'after-cooked', wikiAttrs, state)
+      ]);
+    }
+
+    return result;
+  },
+
+  click(event) {
+    if (event.target.classList.contains('fa-pencil-square-o')) {
+      this.editWiki();
+    }
+  },
+
+  editWiki() {
+    const model = this.findAncestorModel();
+    const skipProps = ['actions_summary', 'topic', 'url', 'best_solutions_wiki', '__type'];
+    const wikiModelProps = {
+      isBestSolutionsWiki: true
+    };
+
+    Object.keys(model).forEach(prop => {
+      if (!/^_/.test(prop) && skipProps.indexOf(prop) === -1) {
+        const value = model[prop];
+
+        if (!/object|function/.test(typeof value)) {
+          wikiModelProps[prop] = value;
+        }
+      }
+    });
+
+    const wikiModel = Post.create(wikiModelProps);
+
+    wikiModel.setProperties(this.attrs.best_solutions_wiki ? this.attrs.best_solutions_wiki : {
+      cooked: '',
+      raw: ''
+    });
+    skipProps.forEach(prop => {
+      wikiModel.set(prop, model.get(prop));
+    });
+
+    this.sendWidgetAction('editPost', wikiModel);
+  }
+});
+
 createWidget('post-body', {
   buildKey: attrs => `post-body-${attrs.id}`,
   tagName: 'div.topic-body.clearfix',
@@ -339,6 +403,7 @@ createWidget('post-body', {
       const solutionsCount = post.get('topic.posts_count') - post.get('topic.reply_count') - 1;
 
       if (solutionsCount && solutionsCount > 0) {
+        result.push(this.attach('best-solutions', attrs));
         result.push(h('div.solutions-count', `${solutionsCount} Solution${solutionsCount === 1 ? '' : 's'}`));
       }
     }

@@ -137,7 +137,8 @@ const Composer = RestModel.extend({
     this.set("typingTime", typingTime + 100);
   }, 100, {leading: false, trailing: true}),
 
-  editingFirstPost: Em.computed.and('editingPost', 'post.firstPost'),
+  notBestSolutionsWiki: Em.computed.not('post.isBestSolutionsWiki'),
+  editingFirstPost: Em.computed.and('editingPost', 'post.firstPost', 'notBestSolutionsWiki'),
   canEditTitle: Em.computed.or('creatingTopic', 'creatingPrivateMessage', 'editingFirstPost'),
   canCategorize: Em.computed.and('canEditTitle', 'notCreatingPrivateMessage'),
 
@@ -478,9 +479,11 @@ const Composer = RestModel.extend({
       this.set('isBetterSolution', opts.post.is_better_solution);
 
       this.store.find('post', opts.post.get('id')).then(function(post) {
+        const raw = (composer.get('post.isBestSolutionsWiki') ? post.get('best_solutions_wiki.raw') : post.get('raw')) || '';
+
         composer.setProperties({
-          reply: post.get('raw'),
-          originalText: post.get('raw'),
+          reply: raw,
+          originalText: raw,
           loading: false
         });
       });
@@ -525,7 +528,8 @@ const Composer = RestModel.extend({
   editPost(opts) {
     const post = this.get('post'),
           oldCooked = post.get('cooked'),
-          self = this;
+          self = this,
+          isBestSolutionsWiki = this.get('post.isBestSolutionsWiki');
 
     let promise;
 
@@ -533,7 +537,8 @@ const Composer = RestModel.extend({
     // successful resolved promise
     if (this.get('title') &&
         post.get('post_number') === 1 &&
-        this.get('topic.details.can_edit')) {
+        this.get('topic.details.can_edit') &&
+        !isBestSolutionsWiki) {
       const topicProps = this.getProperties(Object.keys(_edit_topic_serializer));
 
        promise = Topic.update(this.get('topic'), topicProps);
@@ -541,7 +546,7 @@ const Composer = RestModel.extend({
       promise = Ember.RSVP.resolve();
     }
 
-    const props = {
+    let props = {
       raw: this.get('reply'),
       edit_reason: opts.editReason,
       image_sizes: opts.imageSizes,
@@ -557,6 +562,18 @@ const Composer = RestModel.extend({
       props.custom_fields = {
         is_better_solution: isBetterSolution
       };
+    }
+
+    if (isBestSolutionsWiki) {
+      props = {
+        custom_fields: {
+          best_solutions_wiki: {
+            raw: this.get('reply'),
+            cooked: this.getCookedHtml()
+          }
+        }
+      };
+      post.set('best_solutions_wiki', props.custom_fields.best_solutions_wiki);
     }
 
     var rollback = throwAjaxError(function(){
@@ -717,6 +734,8 @@ const Composer = RestModel.extend({
     if (!this.get('reply')) return;
     // Do not save when the reply's length is too small
     if (this.get('replyLength') < this.siteSettings.min_post_length) return;
+    // Do not save draft of best solutions wiki
+    if (this.get('post.isBestSolutionsWiki')) return;
 
     const data = {
       reply: this.get('reply'),

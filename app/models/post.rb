@@ -375,6 +375,10 @@ class Post < ActiveRecord::Base
     self.custom_fields["is_better_solution"] || false
   end
 
+  def best_solutions_wiki
+    self.custom_fields["best_solutions_wiki"]
+  end
+
   def unhide!
     self.update_attributes(hidden: false)
     self.topic.update_attributes(visible: true) if is_first_post?
@@ -657,6 +661,7 @@ end
 
 # Adds default custom fields type for Post model
 Post.register_custom_field_type('is_better_solution', :boolean)
+Post.register_custom_field_type('best_solutions_wiki', :json)
 
 # == Schema Information
 #

@@ -8,6 +8,9 @@ plugins:
   reputation_min_value_to_vote_down:
     default: 125
     client: true
+  reputation_min_value_to_edit_wiki:
+    default: 100
+    client: true
   reputation_min_value_to_create_tag:
     default: 1500
     client: true

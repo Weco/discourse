@@ -97,6 +97,24 @@ after_initialize do
       !Discourse.static_doc_topic_ids.include?(topic.id)
     end
 
+    def can_edit_wiki?(post)
+      return true if is_admin?
+
+      if is_my_own?(post)
+        if post.hidden?
+          return false if post.hidden_at.present? &&
+            post.hidden_at >= SiteSetting.cooldown_minutes_after_hiding_posts.minutes.ago
+
+          # If it's your own post and it's hidden, you can still edit it
+          return true
+        end
+
+        return !post.edit_time_limit_expired?
+      end
+
+      check_reputation(SiteSetting.reputation_min_value_to_edit_wiki)
+    end
+
     def can_edit_post?(post)
       if Discourse.static_doc_topic_ids.include?(post.topic_id) && !is_admin?
         return false
@@ -112,7 +130,7 @@ after_initialize do
         return false
       end
 
-      if post.wiki && (@user.trust_level >= SiteSetting.min_trust_to_edit_wiki_post.to_i)
+      if post.wiki && can_edit_wiki?(post)
         return true
       end
 
