@@ -1,5 +1,5 @@
 html {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 // Buttons
@@ -7,38 +7,61 @@ html {
 .widget-button {
     font-weight: 500;
     border-radius: 3px;
-    border: 1px solid #bbcadc;
-    background-color: #f1f8fb;
-    color: #2b6dad;
-    transition: border-color .3s, background-color .3s, color .3s;
+    border: 1px solid #d5d5d5;
+    background-color: #eee;
+    background-image: -webkit-linear-gradient(#fcfcfc, #eee);
+    background-image: linear-gradient(#fcfcfc, #eee);
+    color: #333;
+    transition: none;
+
+    &:focus {
+        outline: none;
+    }
+
+    .divider {
+        display: inline-block;
+        height: 1em;
+        width: 0;
+        border-left: 1px solid;
+        margin: 2px 5px;
+        vertical-align: top;
+        transition: border-color .3s;
+    }
 
     &:hover {
-        background-color: #f1f8fb;
-        border-color: #2865a1;
-        color: #2865a1;
+        color: #333;
+        background-color: #ddd;
+        background-image: -webkit-linear-gradient(#eee, #ddd);
+        background-image: linear-gradient(#eee, #ddd);
+        border-color: #ccc;
     }
 
     &.btn-danger {
-        background-color: #e45735;
-        border-color: #c63c1b;
-        color: #fff;
+        color: #900;
 
         &:hover {
-            background-color: #c63c1b;
-            border-color: #c63c1b;
             color: #fff;
+            background-color: #b33630;
+            background-image: -webkit-linear-gradient(#dc5f59, #b33630);
+            background-image: linear-gradient(#dc5f59, #b33630);
+            border-color: #cd504a;
         }
     }
 
     &.btn-primary {
-        background-color: #3e78ad;
-        border-color: #3a66ad;
         color: #fff;
+        text-shadow: 0 -1px 0 rgba(0,0,0,0.15);
+        background-color: #60b044;
+        background-image: -webkit-linear-gradient(#8add6d, #60b044);
+        background-image: linear-gradient(#8add6d, #60b044);
+        border-color: #5ca941;
 
         &:hover {
-            background-color: #3a66ad;
-            border-color: #3a66ad;
             color: #fff;
+            background-color: #569e3d;
+        	background-image: -webkit-linear-gradient(#79d858, #569e3d);
+        	background-image: linear-gradient(#79d858, #569e3d);
+        	border-color: #4a993e;
         }
     }
 
@@ -82,10 +105,11 @@ html {
 
 .d-editor-button-bar .btn {
     color: #919191;
+    background: none;
     border: 0;
 
     &:hover {
-        background: #b2b2b2;
+        background: #e9e9e9;
         border: 0;
     }
 }
@@ -94,11 +118,13 @@ html {
 #new-account-link {
     &.btn-large {
         padding-left: 18px;
-        background-color: #f1f8fb;
-        color: #2b6dad;
+        background-color: #60b044;
+        background-image: -webkit-linear-gradient(#8add6d, #60b044);
+        background-image: linear-gradient(#8add6d, #60b044);
+        color: #fff;
 
         &:hover {
-            color: #2865a1;
+            color: #fff;
         }
     }
 }
@@ -124,14 +150,18 @@ body {
     input[type="tel"],
     input[type="color"],
     textarea {
-        border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-        box-shadow: inset 0 1px 1px rgba(200, 200, 200, 0.3);
+        color: #333;
+    	border: 1px solid #ddd;
+    	border-radius: 3px;
+    	outline: none;
+    	box-shadow: inset 0 1px 2px rgba(0,0,0,0.075);
         transition: border-color .2s;
 
         &:focus {
-            border-color: #999;
-            outline: 0;
-            box-shadow: inset 0 1px 1px rgba(200, 200, 200, 0.3);
+            background-color: #fff;
+            border-color: #51a7e8;
+        	outline: none;
+        	box-shadow: inset 0 1px 2px rgba(0,0,0,0.075),0 0 5px rgba(81,167,232,0.5);
         }
     }
 }
@@ -140,18 +170,26 @@ body {
 .nav-pills {
     > li {
         > a {
+            color: #7a7a7a;
             border-radius: 3px;
 
             &:hover {
-                background-color: transparent;;
-                color: #2b6dad;
+                background-color: #f9f9f9;
+                color: #7a7a7a;
+
+                .fa {
+                    color: #7a7a7a;
+                }
             }
         }
 
-        &.active {
-            > a {
-                background-color: #eee;
-                color: #222;
+        &.active > a,
+        > a.active  {
+            background-color: #4078c0;
+            color: #fff;
+
+            .fa {
+                color: #fff;
             }
         }
     }
@@ -169,4 +207,23 @@ body {
     display: inline-block;
     padding: 0;
     margin: 0 10px;
+}
+
+.d-header {
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #e5e5e5;
+    box-shadow: none;
+
+    .contents {
+        margin: 4px 0;
+
+        > .title,
+        > .panel {
+            margin-top: 4px;
+        }
+
+        .topic-link {
+        	font-weight: normal;
+        }
+    }
 }

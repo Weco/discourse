@@ -348,15 +348,15 @@ export default createWidget('post-menu', {
 
     const actions = [visibleButtons];
 
-    if (secondaryButtons.length) {
-      if (attrs.mobileView) {
-        actions.push(h('div.secondary-actions', secondaryButtons));
-      } else {
-        postControls.push(this.attach('post-buttons-dropdown', { buttons: secondaryButtons }));
-      }
+    if (secondaryButtons.length && attrs.mobileView) {
+      actions.push(h('div.secondary-actions', secondaryButtons));
     }
 
     postControls.push(h('div.actions', actions));
+
+    if (secondaryButtons.length && !attrs.mobileView) {
+      postControls.push(this.attach('post-buttons-dropdown', { buttons: secondaryButtons }));
+    }
 
     if (state.adminVisible) {
       postControls.push(this.attach('post-admin-menu', attrs));

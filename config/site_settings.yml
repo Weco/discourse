@@ -355,7 +355,7 @@ users:
     default: false
   prioritize_username_in_ux:
     client: true
-    default: false
+    default: true
   email_token_valid_hours:
     default: 24
     min: 1
@@ -482,7 +482,7 @@ posting:
     default: true
   display_name_on_posts:
     client: true
-    default: true
+    default: false
   show_time_gap_days:
     default: 7
     client: true

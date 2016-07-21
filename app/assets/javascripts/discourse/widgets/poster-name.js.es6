@@ -49,10 +49,6 @@ export default createWidget('poster-name', {
             this.userLink(attrs, nameFirst ? username : name)));
     }
 
-    if (attrs.user_profession) {
-      contents.push(h('span.profession', this.userLink(attrs, attrs.user_profession)));
-    }
-
     const title = attrs.user_title;
     if (title && title.length) {
       let titleContents = title;

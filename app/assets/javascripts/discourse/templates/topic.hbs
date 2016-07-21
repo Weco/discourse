@@ -33,9 +33,6 @@
             {{d-button action="finishedEditingTopic" class="btn-primary btn-small submit-edit" icon="check"}}
             {{d-button action="cancelEditingTopic" class="btn-small cancel-edit" icon="times"}}
           {{else}}
-            {{#unless model.isPrivateMessage}}
-              {{topic-category topic=model}}
-            {{/unless}}
             <h1>
               {{#unless model.is_warning}}
                 <a href={{pmPath}}>
@@ -54,6 +51,9 @@
                 <a href {{action "editTopic"}} class="edit-topic" title="{{i18n "edit"}}">{{fa-icon "pencil"}}</a>
               {{/if}}
             </h1>
+            {{#unless model.isPrivateMessage}}
+              {{topic-category topic=model}}
+            {{/unless}}
           {{/if}}
         </div>
         {{plugin-outlet "topic-title"}}

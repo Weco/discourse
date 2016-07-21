@@ -1,7 +1,31 @@
-.topic-meta-data {
-    margin-left: 0;
-    float: left;
-	margin-bottom: 10px;
+.topic-post article {
+	border: 0;
+	padding: 0;
+}
+
+.topic-body-header {
+	overflow: hidden;
+
+	.topic-avatar {
+		margin-right: 10px;
+		padding: 0;
+
+		img {
+			border-radius: 3px;
+		}
+	}
+
+	.names {
+		float: none;
+	}
+
+	.topic-meta-data {
+	    margin-left: 0;
+
+		.post-info {
+			font-size: 12px;
+		}
+	}
 }
 
 nav.post-controls button {

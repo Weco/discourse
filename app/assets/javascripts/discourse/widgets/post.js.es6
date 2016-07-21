@@ -175,7 +175,9 @@ createWidget('post-meta-data', {
     }
 
     if (attrs.created_at) {
-      result.push(this.attach('post-date', Object.assign({ prefix: 'Created ' }, attrs)));
+      result.push(this.attach('post-date', Object.assign({
+        prefix: attrs.mobileView ? '' : 'created on '
+      }, attrs)));
     }
 
     if (attrs.via_email) {
@@ -367,9 +369,14 @@ createWidget('post-body', {
 
   html(attrs, state) {
     const result = [
-      h('div.post-author', [this.attach('post-avatar', attrs), this.attach('poster-name', attrs)]),
+      h('div.topic-body-header', [
+        h('div.post-author', [
+          this.attach('post-avatar', attrs),
+          this.attach('poster-name', attrs)
+        ]),
+        this.attach('post-meta-data', attrs)
+      ]),
       this.attach('post-contents', attrs),
-      this.attach('post-meta-data', attrs),
       this.attach('post-menu', attrs)
     ];
     const post = this.findAncestorModel();
@@ -398,15 +405,6 @@ createWidget('post-body', {
 
     result.push(this.attach('actions-summary', attrs));
     result.push(this.attach('post-links', attrs));
-
-    if (attrs.post_number === 1 && attrs.has_rating) {
-      const solutionsCount = post.get('topic.posts_count') - post.get('topic.reply_count') - 1;
-
-      if (solutionsCount && solutionsCount > 0) {
-        result.push(this.attach('best-solutions', attrs));
-        result.push(h('div.solutions-count', `${solutionsCount} Solution${solutionsCount === 1 ? '' : 's'}`));
-      }
-    }
 
     return result;
   },
@@ -440,13 +438,23 @@ createWidget('post-article', {
   },
 
   html(attrs, state) {
-    const rows = [h('a.tabLoc', { attributes: { href: ''} })];
-    if (state.repliesAbove.length) {
-      const replies = state.repliesAbove.map(p => this.attach('embedded-post', p, { state: { above: true } }));
-      rows.push(h('div.row', h('section.embedded-posts.top.topic-body.offset2', replies)));
+    const rows = [
+      h('a.tabLoc', { attributes: { href: ''} }),
+      h('div.row', [
+        this.attach('post-body', attrs)
+      ])
+    ];
+
+    if (attrs.post_number === 1 && attrs.has_rating) {
+      const post = this.findAncestorModel();
+      const solutionsCount = post.get('topic.posts_count') - post.get('topic.reply_count') - 1;
+
+      if (solutionsCount && solutionsCount > 0) {
+        rows.push(this.attach('best-solutions', attrs));
+        rows.push(h('div.solutions-count', `${solutionsCount} Solution${solutionsCount === 1 ? '' : 's'}`));
+      }
     }
 
-    rows.push(h('div.row', [this.attach('post-body', attrs)]));
     return rows;
   },
 

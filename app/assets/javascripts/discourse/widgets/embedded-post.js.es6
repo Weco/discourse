@@ -24,7 +24,12 @@ createWidget('post-link-arrow', {
 });
 
 export default createWidget('embedded-post', {
+  tagName: 'div.topic-reply',
   buildKey: attrs => `embedded-post-${attrs.id}`,
+
+  buildAttributes(attrs) {
+    return {'data-post-id': attrs.id}
+  },
 
   html(attrs, state) {
     const menu = [this.attach('post-menu', attrs, {
@@ -45,12 +50,8 @@ export default createWidget('embedded-post', {
 
     body.push.apply(body, [new PostCooked(attrs, new DecoratorHelper(this)), menu]);
 
-    return [
-      h('div.reply', {attributes: {'data-post-id': attrs.id}}, [
-        h('div.row', [
-          h('div.topic-body', body)
-        ])
-      ])
-    ];
+    return h('div.row', [
+      h('div.topic-body', body)
+    ]);
   }
 });

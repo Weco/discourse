@@ -18,7 +18,8 @@
             white-space: nowrap;
 
             &.sorting {
-                background-color: #e9e9e9;
+                background-color: #4078c0;
+                color: #fff;
             }
         }
 
@@ -41,32 +42,32 @@
 }
 
 .topic-list-item {
-    padding-top: 15px;
+    padding-top: 20px;
 
     table.topic-list-order + & {
         padding-top: 0;
-
-        .topic-body {
-            border-top: 0;
-        }
     }
 
     a.title {
         &,
         &.visited:not(.badge-notification) {
-            font-size: 19px;
+            font-size: 24px;
             color: #333;
             letter-spacing: -0.5px;
         	line-height: 1.25;
-        	font-weight: bold;
+        	font-weight: normal;
         }
     }
 
-    .title-wrapper > h1 {
-        width: 100%;
-        padding-top: 10px;
-        clear: both;
-        margin: 0;
+    .title-wrapper {
+        overflow: hidden;
+
+        > h1 {
+           width: 100%;
+           padding-bottom: 10px;
+           clear: both;
+           margin: 0;
+       }
     }
 
     .bulk-select {
@@ -78,27 +79,50 @@
         float: left;
     }
 
-    .topic-body {
-        .contents:not(.full) .cooked {
-            display: inline;
-            margin-right: 4px;
+    .topic-post {
+        padding-left: 0;
 
-            p, b, i, strong, em {
+        .topic-body {
+            .contents:not(.full) .cooked {
                 display: inline;
+                margin-right: 4px;
+
+                p, b, i, strong, em {
+                    display: inline;
+                }
             }
+
+            &:after,
+            &:before {
+                display: none;
+            }
+        }
+    }
+
+    .topic-body-header {
+        overflow: hidden;
+
+        .post-author {
+            .topic-avatar {
+        		margin-right: 10px;
+                position: static;
+                left: 0;
+        	}
+
+        	.names {
+        		float: none;
+        	}
+        }
+
+        .post-date {
+            font-size: 12px;
+        	color: #767676;
         }
     }
 }
 
-.topic-list-item-post {
-    &.best-solution {
-        font-size: 13px;
-        padding: 8px;
-        margin-top: -1px;
-        background: #f6f6f6;
-        border: 1px solid #e2e2e2;
-        border-radius: 2px;
-        display: inline-block;
-        margin-bottom: 20px;
-    }
+.topic-list-item-post.best-solution > h3 {
+    font-weight: 500;
+	font-size: 18px;
+	margin: 0;
 }

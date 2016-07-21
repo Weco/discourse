@@ -1,14 +1,15 @@
 .discourse-tag.box {
-    padding: 4px 8px;
-    font-size: 1.1em;
-    font-weight: 500;
-    line-height: 1.2em;
-    border-radius: 12px;
-    background: #f4f4fa;
-    color: #808393;
-    transition: background-color .3s;
+    position: relative;
+	display: inline-block;
+	padding: 3px 5px;
+	font: 12px/14px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+	color: #336479;
+	white-space: nowrap;
+	background-color: #e8f0f8;
+	border-radius: 3px;
+    transition: background-color .2s;
 
     &:hover {
-        background: #ededf7;
+        background: #e6f1f6;
     }
 }

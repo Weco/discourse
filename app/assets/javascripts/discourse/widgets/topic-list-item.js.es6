@@ -46,8 +46,6 @@ createWidget('topic-list-item-menu', {
       }
     }
 
-    buttons.push(this.attach('post-date', Object.assign({ prefix: 'Created ' }, attrs)));
-
     return h('nav.post-controls.clearfix', [
       h('div.actions', buttons)
     ]);
@@ -153,7 +151,10 @@ export default createWidget('topic-list-item', {
       h('a.tabLoc', { attributes: { href: ''} }),
       h('div.row', [
         h('div.topic-body.clearfix', [
-          h('div.post-author', [this.attach('post-avatar', attrs), this.attach('poster-name', attrs)]),
+          h('div.topic-body-header', [
+            h('div.post-author', [this.attach('post-avatar', attrs), this.attach('poster-name', attrs)]),
+            this.attach('post-date', Object.assign({ prefix: 'Created ' }, attrs))
+          ]),
           this.attach('topic-list-item-contents', attrs),
           this.attach('topic-list-item-menu', attrs)
         ])

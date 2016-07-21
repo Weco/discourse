@@ -1,7 +1,4 @@
 <div class="title-wrapper">
-  {{#unless topic.isPrivateMessage}}
-    {{topic-category topic=topic}}
-  {{/unless}}
   <h1>
     {{#if bulkSelectEnabled}}
       <input type="checkbox" class="bulk-select">
@@ -10,6 +7,9 @@
     {{topic-link topic}}
     {{plugin-outlet "topic-list-after-title"}}
   </h1>
+  {{#unless topic.isPrivateMessage}}
+    {{topic-category topic=topic}}
+  {{/unless}}
   {{#if showTopicPostBadges}}
     {{raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl}}
   {{/if}}

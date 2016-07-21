@@ -1,22 +1,13 @@
 .topic-list-item {
-    .topic-body {
-        border-bottom: 1px solid #e2e2e2;
+    width: $topic-body-width;
+
+    @media(max-width: 870px) {
+        box-sizing: border-box;
+        width: 100%;
     }
-}
 
-.topic-list-item-post.best-solution {
-    .topic-body {
-        border-bottom: 0;
-        padding-bottom: 0;
-
-        &:after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            border-bottom: 1px solid #e2e2e2;
-            bottom: -20px;
-            left: -10px;
-        }
+    .topic-post .topic-body {
+        width: 100%;
     }
 }
 
@@ -32,12 +23,24 @@
         > li.bullet {
             float: none;
             margin: 0 0 10px 0;
-            background: #E9E9E6;
+            border: 1px solid #d5d5d5;
+            background-color: #eee;
+            background-image: -webkit-linear-gradient(#fcfcfc, #eee);
+            background-image: linear-gradient(#fcfcfc, #eee);
+            color: #333;
             border-radius: 3px;
             overflow: hidden;
 
+            &:hover {
+                color: #333;
+                background-color: #ddd;
+                background-image: -webkit-linear-gradient(#eee, #ddd);
+                background-image: linear-gradient(#eee, #ddd);
+                border-color: #ccc;
+            }
+
             > .badge-category {
-                background-color: none;
+                background-color: transparent!important;
 
                 &:first-child {
                     width: calc(100% - 40px);
@@ -58,16 +61,43 @@
     .category-dropdown-menu {
         border-top: 0;
         border-radius: 0 0 3px 3px;
-        margin: 0 2px;
+        margin: 1px 2px;
     }
 
     .nav-pills {
         float: none;
         margin: 0 0 10px 0;
+        border: 1px solid #d8d8d8;
+        border-radius: 3px;
+        background: #fff;
+        overflow: hidden;
 
         > li {
             float: none;
-            margin: 0 0 5px 0;
+            margin: 0;
+
+            &:not(:first-child) {
+                border-top: 1px solid #eee;
+            }
+
+            > a {
+                color: #2b6dad;
+                padding: 8px 10px;
+                border-left: 3px solid transparent;
+                border-radius: 0;
+                font-size: 14px;
+
+                &:hover {
+                    background-color: #f9f9f9;
+                }
+            }
+
+            &.active > a {
+                background-color: #fff;
+                border-left-color: #d26911;
+                color: #333;
+                font-weight: bold;
+            }
         }
     }
 
@@ -75,8 +105,12 @@
         float: none;
         width: 100%;
         font-size: 1em;
-        text-align: left;
+        text-align: center;
         margin-left: 0;
+
+        .fa {
+            margin-right: 0;
+        }
     }
 
     .category-notification-menu .dropdown-menu {
