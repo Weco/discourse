@@ -227,3 +227,40 @@ body {
         }
     }
 }
+
+.select2-container {
+    border: 0!important;
+    box-shadow: none;
+
+    &.select2-dropdown-open {
+        margin-bottom: 0;
+    }
+
+    a.select2-choice {
+        border: 1px solid #d5d5d5;
+        background-color: #eee;
+        background-image: -webkit-linear-gradient(#fcfcfc, #eee);
+        background-image: linear-gradient(#fcfcfc, #eee);
+        color: #333;
+        transition: none;
+        box-shadow: none;
+
+        &:hover {
+            color: #333;
+            background-color: #ddd;
+            background-image: -webkit-linear-gradient(#eee, #ddd);
+            background-image: linear-gradient(#eee, #ddd);
+            border-color: #ccc;
+        }
+    }
+}
+
+.select2-drop-active {
+    border-color: #d5d5d5;
+    background: #eee;
+}
+
+.select2-results .select2-highlighted {
+    background: #ddd;
+    border-radius: 3px;
+}

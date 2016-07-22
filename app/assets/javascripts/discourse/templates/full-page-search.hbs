@@ -59,52 +59,62 @@
   {{/if}}
 
   {{#each model.posts as |result|}}
-    <div class='fps-result'>
-      <div class='author'>
-        {{avatar result imageSize="large"}}
-      </div>
-
-      <div class='fps-topic'>
-        <div class='topic'>
+    <div class='topic-list-item'>
+      <div class="title-wrapper">
+        <h1>
           {{#if bulkSelectEnabled}}
             {{track-selected selectedList=selected selectedId=result.topic}}
           {{/if}}
-
-          <a class='search-link' href='{{unbound result.url}}'>
+          <a class='search-link title' href='{{unbound result.url}}'>
             {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{#highlight-text highlight=q}}{{{unbound result.topic.fancyTitle}}}{{/highlight-text}}</span>
           </a>
-
-          <div class='search-category'>
-            {{category-link result.topic.category}}
-            {{#each result.topic.tags as |tag|}}
-              {{discourse-tag tag}}
-            {{/each}}
-            {{plugin-outlet "full-page-search-category"}}
+        </h1>
+        <div class='search-category'>
+          {{category-link result.topic.category}}
+          {{#each result.topic.tags as |tag|}}
+            {{discourse-tag tag}}
+          {{/each}}
+          {{plugin-outlet "full-page-search-category"}}
+        </div>
+      </div>
+      <div class="topic-list-item-post">
+        <div class="topic-post clearfix">
+          <div class="topic-body">
+            <div class="topic-body-header">
+              <div class='post-author'>
+                <div class="topic-avatar">
+                  {{avatar result imageSize="large"}}
+                </div>
+                <div class="names">
+                  <span class="first username">
+                    {{result.username}}
+                  </span>
+                </div>
+                <div class="post-info">
+                  <span class="post-date">{{format-date result.created_at absoluteDate='true'}}</span>
+                </div>
+              </div>
+            </div>
+            {{#if result.blurb}}
+              <div class="regular contents">
+                <div class="cooked">
+                  {{#highlight-text highlight=q}}
+                    {{{unbound result.blurb}}}
+                  {{/highlight-text}}
+                </div>
+              </div>
+            {{/if}}
+            {{#if showLikeCount}}
+            {{#if result.like_count}}
+              <section class="post-menu-area clearfix">
+                <span class='like-count'>
+                  {{result.like_count}} <i class="icon fa fa-heart"></i>
+                </span>
+              </section>
+            {{/if}}
+            {{/if}}
           </div>
         </div>
-
-        <div class='blurb container'>
-          <span class='date'>
-            {{format-age result.created_at}}
-            {{#if result.blurb}}
-            -
-            {{/if}}
-          </span>
-
-          {{#if result.blurb}}
-            {{#highlight-text highlight=q}}
-              {{{unbound result.blurb}}}
-            {{/highlight-text}}
-          {{/if}}
-        </div>
-
-        {{#if showLikeCount}}
-          {{#if result.like_count}}
-            <span class='like-count'>
-              {{result.like_count}} <i class="icon fa fa-heart"></i>
-            </span>
-          {{/if}}
-        {{/if}}
       </div>
     </div>
   {{/each}}
