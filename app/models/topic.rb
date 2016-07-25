@@ -473,6 +473,7 @@ class Topic < ActiveRecord::Base
     result = exec_sql "UPDATE topics
                         SET highest_post_number = (SELECT COALESCE(MAX(post_number), 0) FROM posts WHERE topic_id = :topic_id AND deleted_at IS NULL),
                             posts_count = (SELECT count(*) FROM posts WHERE deleted_at IS NULL AND topic_id = :topic_id),
+                            reply_count = (SELECT count(*) FROM posts WHERE deleted_at IS NULL AND topic_id = :topic_id AND reply_to_post_number IS NOT NULL),
                             last_posted_at = (SELECT MAX(created_at) FROM POSTS WHERE topic_id = :topic_id AND deleted_at IS NULL)
                         WHERE id = :topic_id
                         RETURNING highest_post_number", topic_id: topic_id

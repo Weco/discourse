@@ -209,6 +209,10 @@ class PostSerializer < BasicPostSerializer
     replies
   end
 
+  def include_replies?
+    @topic_view.present?
+  end
+
   def bookmarked
     true
   end

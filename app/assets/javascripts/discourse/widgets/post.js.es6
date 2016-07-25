@@ -403,8 +403,8 @@ createWidget('post-body', {
       ));
     }
 
-    result.push(this.attach('actions-summary', attrs));
-    result.push(this.attach('post-links', attrs));
+    //result.push(this.attach('actions-summary', attrs));
+    //result.push(this.attach('post-links', attrs));
 
     return result;
   },

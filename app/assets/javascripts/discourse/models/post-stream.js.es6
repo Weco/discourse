@@ -347,6 +347,7 @@ export default RestModel.extend({
     const topic = this.get('topic');
     topic.setProperties({
       posts_count: (topic.get('posts_count') || 0) + 1,
+      reply_count: (topic.get('reply_count') || 0) + (post.get('reply_to_post_number') ? 1 : 0),
       last_posted_at: new Date(),
       'details.last_poster': user,
       highest_post_number: (topic.get('highest_post_number') || 0) + 1
@@ -397,7 +398,8 @@ export default RestModel.extend({
 
     topic.setProperties({
       highest_post_number: (topic.get('highest_post_number') || 0) - 1,
-      posts_count: (topic.get('posts_count') || 0) - 1
+      posts_count: (topic.get('posts_count') || 0) - 1,
+      reply_count: (topic.get('reply_count') || 0) - (post.get('reply_to_post_number') ? 1 : 0)
     });
 
     // TODO unfudge reply count on parent post

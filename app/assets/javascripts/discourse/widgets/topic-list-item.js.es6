@@ -8,6 +8,14 @@ createWidget('topic-list-item-menu', {
   tagName: 'section.post-menu-area.clearfix',
   buildKey: attrs => `topic-list-item-menu-${attrs.id}`,
 
+  defaultState() {
+    return { isEmpty: false };
+  },
+
+  buildClasses(attrs, state) {
+    return state.isEmpty ? 'empty' : '';
+  },
+
   html(attrs, state) {
     const post = this.findAncestorModel();
     const buttons = [];
@@ -44,6 +52,13 @@ createWidget('topic-list-item-menu', {
           counter: repliesCount
         }));
       }
+    }
+
+    const isEmpty = !buttons.length;
+
+    if (state.isEmpty !== isEmpty) {
+      state.isEmpty = isEmpty;
+      this.scheduleRerender();
     }
 
     return h('nav.post-controls.clearfix', [
