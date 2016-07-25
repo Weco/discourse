@@ -185,11 +185,20 @@ class PostRevisor
     PostRevisor.tracked_topic_fields.keys.any? {|f| @fields.has_key?(f)}
   end
 
+  def only_custom_fields_changed?
+    return false if !@fields.has_key?('custom_fields') || @fields['custom_fields'] == @post.send('custom_fields')
+    POST_TRACKED_FIELDS.each do |field|
+      return false if field != 'custom_fields' && @fields.has_key?(field) && @fields[field] != @post.send(field)
+    end
+    true
+  end
+
   def revise_post
     should_create_new_version? ? revise_and_create_new_version : revise
   end
 
   def should_create_new_version?
+    return false if only_custom_fields_changed?
     edited_by_another_user? || !ninja_edit? || owner_changed? || force_new_version?
   end
 
