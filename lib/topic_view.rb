@@ -87,7 +87,7 @@ class TopicView
 
   def gaps
     return unless @contains_gaps
-    Gaps.new(filtered_post_ids, unfiltered_posts.order(:sort_order).pluck(:id))
+    Gaps.new(filtered_post_ids, unfiltered_posts.order(:sort_order).pluck(:id).uniq)
   end
 
   def last_post
