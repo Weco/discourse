@@ -137,6 +137,10 @@ registerButton('comments', attrs => {
       label += 'comments.other';
     }
   } else {
+    if (!this.currentUser) {
+      return;
+    }
+
     label += 'comments.one';
   }
 
@@ -283,11 +287,9 @@ export default createWidget('post-menu', {
     if (!attrs.reply_to_post_number) {
       const isSecondaryVisible = !state.collapsed
 
-      if (isSecondaryVisible) {
-        secondaryButtons = allButtons.filter(i => visibleButtons.indexOf(i) === -1);
-      }
+      secondaryButtons = allButtons.filter(i => visibleButtons.indexOf(i) === -1);
 
-      if (!isSecondaryVisible || !attrs.mobileView) {
+      if (secondaryButtons.length && (!isSecondaryVisible || !attrs.mobileView)) {
         const showMore = this.attach('button', {
           action: 'showMoreActions',
           title: 'show_more',
@@ -295,6 +297,10 @@ export default createWidget('post-menu', {
           icon: 'ellipsis-h'
         });
         visibleButtons.splice(visibleButtons.length, 0, showMore);
+      }
+
+      if (!isSecondaryVisible) {
+        secondaryButtons = [];
       }
     }
 

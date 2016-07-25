@@ -10,6 +10,10 @@
         box-sizing: border-box;
         z-index: auto;
 
+        .time-gap + & {
+            border-top: 1px solid #ddd;
+        }
+
         .contents {
             margin: 15px;
             font-size: 14px;
